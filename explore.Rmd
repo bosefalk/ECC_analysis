@@ -1,0 +1,48 @@
+---
+title: "ECC exploratory analysis"
+output: html_notebook
+author: "Bose Falk"
+---
+
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+source('lib/loading_scripts.R')
+
+dat <- load_data('trust')
+validate_data(dat)
+
+```
+
+As response variables, we're interested in the trust people have in their government institutions. First we explore simply just trust in the country's parliament, variable `trstprl`.
+
+Look at 'time spent consuming news or programmes about politics or current affairs' for different media types in different countries (newspaper, radio, TV):
+
+```{r}
+
+plot_df <- dat %>% select(cntry, trstprl, tvpol, rdpol, nwsppol) %>% gather('media', 'score', tvpol, rdpol, nwsppol)
+
+
+ggplot(plot_df %>% drop_na, aes(x = as.factor(trstprl), y = score)) + geom_count() + facet_grid(media ~ cntry)
+
+
+```
+
+Overall, trust is higher in Denmark and Estonia, amount of politics-related programming watches is about the same, and no clear indicator overall that there is an upward trend.
+
+Summary variable for consumption of political-related programming across all three media types, `pol_prog_avg`, simple sum. The question is worded in 'time spend watching...' (not relative), so the sum should give a good indication of the total time.
+
+```{r}
+
+dat %<>% mutate(pol_prog_avg = rowSums(select(., nwsppol, rdpol, tvpol)))
+
+ggplot(dat %>% drop_na, aes(x = trstprl, y = pol_prog_avg)) + 
+  geom_count() + 
+  geom_smooth(method='lm') +
+  facet_grid(cntry ~ .)
+
+fit2 <- dat %>% group_by(cntry) %>% do(mod = lm(trstprl ~ pol_prog_avg, data = .))
+fit2$mod
+
+```
