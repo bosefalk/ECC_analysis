@@ -15,6 +15,12 @@ validate_data(dat)
 
 ```
 
+Analyze only one round for now:
+```{r}
+dat %<>% filter(essround == "4")
+
+```
+
 As response variables, we're interested in the trust people have in their government institutions. First we explore simply just trust in the country's parliament, variable `trstprl`.
 
 Look at 'time spent consuming news or programmes about politics or current affairs' for different media types in different countries (newspaper, radio, TV):
@@ -29,7 +35,7 @@ ggplot(plot_df %>% drop_na, aes(x = as.factor(trstprl), y = score)) + geom_count
 
 ```
 
-Overall, trust is higher in Denmark and Estonia, amount of politics-related programming watches is about the same, and no clear indicator overall that there is an upward trend.
+Overall, trust is higher in Denmark and Estonia, amount of politics-related programming watched is about the same, and no clear indicator overall that there is an upward trend.
 
 Summary variable for consumption of political-related programming across all three media types, `pol_prog_avg`, simple sum. The question is worded in 'time spend watching...' (not relative), so the sum should give a good indication of the total time.
 
@@ -44,5 +50,29 @@ ggplot(dat %>% drop_na, aes(x = trstprl, y = pol_prog_avg)) +
 
 fit2 <- dat %>% group_by(cntry) %>% do(mod = lm(trstprl ~ pol_prog_avg, data = .))
 fit2$mod
+
+```
+
+
+### Intra-person difference in trust variables:
+
+```{r}
+dat_diff <- dat %>% mutate(difflgl = trstprl - trstlgl, 
+                           diffplc = trstprl - trstplc, 
+                           diffplt = trstprl - trstplt, 
+                           diffprt = trstprl - trstprl,
+                           diffep = trstprl - trstep,
+                           diffun = trstprl - trstun)
+dat_diff_plot <- dat_diff %>% gather('comparison', 'difference', 31:36)
+ggplot(dat_diff_plot, aes(x = comparison, y = difference)) + geom_boxplot() + facet_grid(cntry ~ .)
+
+
+
+```
+
+
+```{r}
+
+
 
 ```

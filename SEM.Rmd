@@ -1,0 +1,45 @@
+---
+title: "Structured Equation Modeling"
+output: html_notebook
+---
+
+```{r}
+library(lavaan)
+library(ggplot2)
+library(tidyverse)
+source('lib/loading_scripts.R')
+
+dat <- load_data('trust')
+validate_data(dat)
+
+
+```
+
+
+```{r}
+# Filter to keep only Denmark and one survery round for now
+dat %<>% filter(essround == "4")
+dat %<>% filter(cntry == "DK")
+
+
+```
+
+
+
+# SEM model 1
+
+
+```{r}
+#https://www.draw.io/#G1VOWRneuwvycp48p7TP8YTj6darYgvRPW
+# http://lavaan.ugent.be/tutorial/tutorial.pdf
+SEM_mod1 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
+  trst_ind =~ ppltrst + pplfair + pplhlp
+  pol_news =~ tvpol + rdpol + nwsppol
+  trst_gov ~ trst_ind + pol_news + netuse'
+
+fit1 = sem(SEM_mod1, data = dat)
+summary(fit1, standardized = TRUE)
+
+
+
+```
