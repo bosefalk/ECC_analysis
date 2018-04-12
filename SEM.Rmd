@@ -32,14 +32,82 @@ dat %<>% filter(cntry == "DK")
 ```{r}
 #https://www.draw.io/#G1VOWRneuwvycp48p7TP8YTj6darYgvRPW
 # http://lavaan.ugent.be/tutorial/tutorial.pdf
+# http://joophox.net/publist/semfamre.pdf
 SEM_mod1 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
   trst_ind =~ ppltrst + pplfair + pplhlp
   pol_news =~ tvpol + rdpol + nwsppol
   trst_gov ~ trst_ind + pol_news + netuse'
 
 fit1 = sem(SEM_mod1, data = dat)
-summary(fit1, standardized = TRUE)
+summary(fit1, fit.measures = TRUE)
+```
 
+```{r}
+
+SEM_mod2 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
+  pol_news =~ tvpol + rdpol + nwsppol
+  trst_gov ~ pol_news + netuse'
+
+fit2 = sem(SEM_mod2, data = dat)
+summary(fit2, fit.measures = TRUE)
+
+```
+
+
+```{r}
+# Just to test my understanding, invert one trust variable and we should see an Estimate with the opposite sign
+
+dat$trstplc_inv <- abs(dat$trstplc - 10)
+
+SEM_mod3 <- 'trst_gov =~ trstprl + trstlgl + trstplc_inv + trstprt
+  pol_news =~ tvpol + rdpol + nwsppol
+  trst_gov ~ pol_news + netuse'
+
+fit3 = sem(SEM_mod3, data = dat)
+summary(fit3, fit.measures = TRUE)
+
+
+
+```
+
+
+```{r}
+SEM_mod4 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt + tvpol
+  pol_news =~ rdpol + nwsppol
+  trst_gov ~ pol_news + netuse'
+
+fit4 = sem(SEM_mod4, data = dat)
+summary(fit4, fit.measures = TRUE)
+
+
+
+```
+
+
+```{r}
+
+# With correlations
+
+SEM_mod6 <- '# Latent variables
+  trst_gov =~ trstprl + trstlgl + trstplc + trstprt
+  trst_ind =~ ppltrst + pplfair + pplhlp
+  pol_news =~ tvpol + rdpol + nwsppol
+  
+  # Regression model
+  trst_gov ~ trst_ind + pol_news + netuse
+
+  # Correlations
+  trst_ind ~~ pol_news + netuse
+  pol_news ~~ netuse
+
+  '
+
+
+fit6 = sem(SEM_mod6, data = dat)
+summary(fit6, fit.measures = TRUE)
+
+
+```
 
 
 ```
