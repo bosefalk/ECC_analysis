@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<!-- saved from url=(0085)http://m-clark.github.io/docs/sem/structural-equation-modeling.html#measurement-model -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Graphical and Latent Variable Modeling</title>
+  <meta name="description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc.">
+  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Graphical and Latent Variable Modeling">
+  <meta property="og:type" content="book">
+  <meta property="og:url" content="https://m-clark.github.io/docs/sem/">
+  <meta property="og:image" content="https://m-clark.github.io/docs/sem/img/198R_1.png">
+  <meta property="og:description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc.">
+  <meta name="github-repo" content="m-clark/sem/">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Graphical and Latent Variable Modeling">
+  
+  <meta name="twitter:description" content="Structural Equation Modeling: This document focuses on structural equation modeling. It is conceptually based, and tries to generalize beyond the standard SEM treatment. It is has special emphasis on the lavaan package. It will continue to be a work in progress, particularly the sections after the SEM chapter. Topics include: graphical models, including path analysis, bayesian networks, and network analysis, mediation, moderation, latent variable models, including principal components analysis and ‘factor analysis’, measurement models, structural equation models, mixture models, growth curves. Topics I hope to provide overviews of in the future include other latent variable techniques and extensions such as IRT, collaborative filtering/recommender systems, hidden markov models, multi-group models etc.">
+  <meta name="twitter:image" content="https://m-clark.github.io/docs/sem/img/198R_1.png">
+
+
+
+<meta name="date" content="2017-08-07">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="http://m-clark.github.io/docs/sem/latent-variables-1.html">
+<link rel="next" href="http://m-clark.github.io/docs/sem/latent-growth-curves.html">
+<script src="./Graphical and Latent Variable Modeling_files/jquery.min.js.download"></script>
+<link href="./Graphical and Latent Variable Modeling_files/style.css" rel="stylesheet">
+<link href="./Graphical and Latent Variable Modeling_files/plugin-bookdown.css" rel="stylesheet">
+<link href="./Graphical and Latent Variable Modeling_files/plugin-highlight.css" rel="stylesheet">
+<link href="./Graphical and Latent Variable Modeling_files/plugin-search.css" rel="stylesheet">
+<link href="./Graphical and Latent Variable Modeling_files/plugin-fontsettings.css" rel="stylesheet">
+
+
+
+
+
+
+
+<script src="./Graphical and Latent Variable Modeling_files/htmlwidgets.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/viz.js.download"></script>
+<link href="./Graphical and Latent Variable Modeling_files/styles.css" rel="stylesheet">
+<script src="./Graphical and Latent Variable Modeling_files/grViz.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/d3.min.js.download"></script>
+<link href="./Graphical and Latent Variable Modeling_files/heatmapcore.css" rel="stylesheet">
+<script src="./Graphical and Latent Variable Modeling_files/heatmapcore.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/index.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/d3heatmap.js.download"></script>
+<link href="./Graphical and Latent Variable Modeling_files/vis.css" rel="stylesheet">
+<script src="./Graphical and Latent Variable Modeling_files/vis.min.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/visNetwork.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/datatables.js.download"></script>
+<link href="./Graphical and Latent Variable Modeling_files/jquery.dataTables.min.css" rel="stylesheet">
+<link href="./Graphical and Latent Variable Modeling_files/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="./Graphical and Latent Variable Modeling_files/jquery.dataTables.min.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/plotly.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/typedarray.min.js.download"></script>
+<link href="./Graphical and Latent Variable Modeling_files/crosstalk.css" rel="stylesheet">
+<script src="./Graphical and Latent Variable Modeling_files/crosstalk.min.js.download"></script>
+<link href="./Graphical and Latent Variable Modeling_files/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="./Graphical and Latent Variable Modeling_files/plotly-latest.min.js.download"></script><style></style>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="./Graphical and Latent Variable Modeling_files/sem.css" type="text/css">
+<link rel="stylesheet" href="./Graphical and Latent Variable Modeling_files/book.css" type="text/css">
+<script type="text/javascript" src="./Graphical and Latent Variable Modeling_files/MathJax.js.download"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style><style type="text/css">.mjx-chtml {display: inline-block; line-height: 0; text-indent: 0; text-align: left; text-transform: none; font-style: normal; font-weight: normal; font-size: 100%; font-size-adjust: none; letter-spacing: normal; word-wrap: normal; word-spacing: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0; min-height: 0; border: 0; margin: 0; padding: 1px 0}
+.MJXc-display {display: block; text-align: center; margin: 1em 0; padding: 0}
+.mjx-chtml[tabindex]:focus, body :focus .mjx-chtml[tabindex] {display: inline-table}
+.mjx-full-width {text-align: center; display: table-cell!important; width: 10000em}
+.mjx-math {display: inline-block; border-collapse: separate; border-spacing: 0}
+.mjx-math * {display: inline-block; -webkit-box-sizing: content-box!important; -moz-box-sizing: content-box!important; box-sizing: content-box!important; text-align: left}
+.mjx-numerator {display: block; text-align: center}
+.mjx-denominator {display: block; text-align: center}
+.MJXc-stacked {height: 0; position: relative}
+.MJXc-stacked > * {position: absolute}
+.MJXc-bevelled > * {display: inline-block}
+.mjx-stack {display: inline-block}
+.mjx-op {display: block}
+.mjx-under {display: table-cell}
+.mjx-over {display: block}
+.mjx-over > * {padding-left: 0px!important; padding-right: 0px!important}
+.mjx-under > * {padding-left: 0px!important; padding-right: 0px!important}
+.mjx-stack > .mjx-sup {display: block}
+.mjx-stack > .mjx-sub {display: block}
+.mjx-prestack > .mjx-presup {display: block}
+.mjx-prestack > .mjx-presub {display: block}
+.mjx-delim-h > .mjx-char {display: inline-block}
+.mjx-surd {vertical-align: top}
+.mjx-mphantom * {visibility: hidden}
+.mjx-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 2px 3px; font-style: normal; font-size: 90%}
+.mjx-annotation-xml {line-height: normal}
+.mjx-menclose > svg {fill: none; stroke: currentColor}
+.mjx-mtr {display: table-row}
+.mjx-mlabeledtr {display: table-row}
+.mjx-mtd {display: table-cell; text-align: center}
+.mjx-label {display: table-row}
+.mjx-box {display: inline-block}
+.mjx-block {display: block}
+.mjx-span {display: inline}
+.mjx-char {display: block; white-space: pre}
+.mjx-itable {display: inline-table; width: auto}
+.mjx-row {display: table-row}
+.mjx-cell {display: table-cell}
+.mjx-table {display: table; width: 100%}
+.mjx-line {display: block; height: 0}
+.mjx-strut {width: 0; padding-top: 1em}
+.mjx-vsize {width: 0}
+.MJXc-space1 {margin-left: .167em}
+.MJXc-space2 {margin-left: .222em}
+.MJXc-space3 {margin-left: .278em}
+.mjx-chartest {display: block; visibility: hidden; position: absolute; top: 0; line-height: normal; font-size: 500%}
+.mjx-chartest .mjx-char {display: inline}
+.mjx-chartest .mjx-box {padding-top: 1000px}
+.MJXc-processing {visibility: hidden; position: fixed; width: 0; height: 0; overflow: hidden}
+.MJXc-processed {display: none}
+.mjx-test {display: block; font-style: normal; font-weight: normal; font-size: 100%; font-size-adjust: none; text-indent: 0; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow: hidden; height: 1px}
+.mjx-ex-box-test {position: absolute; width: 1px; height: 60ex}
+.mjx-line-box-test {display: table!important}
+.mjx-line-box-test span {display: table-cell!important; width: 10000em!important; min-width: 0; max-width: none; padding: 0; border: 0; margin: 0}
+#MathJax_CHTML_Tooltip {background-color: InfoBackground; color: InfoText; border: 1px solid black; box-shadow: 2px 2px 5px #AAAAAA; -webkit-box-shadow: 2px 2px 5px #AAAAAA; -moz-box-shadow: 2px 2px 5px #AAAAAA; -khtml-box-shadow: 2px 2px 5px #AAAAAA; padding: 3px 4px; z-index: 401; position: absolute; left: 0; top: 0; width: auto; height: auto; display: none}
+.mjx-chtml .mjx-noError {line-height: 1.2; vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+.MJXc-TeX-unknown-R {font-family: STIXGeneral,'Cambria Math','Arial Unicode MS',serif; font-style: normal; font-weight: normal}
+.MJXc-TeX-unknown-I {font-family: STIXGeneral,'Cambria Math','Arial Unicode MS',serif; font-style: italic; font-weight: normal}
+.MJXc-TeX-unknown-B {font-family: STIXGeneral,'Cambria Math','Arial Unicode MS',serif; font-style: normal; font-weight: bold}
+.MJXc-TeX-unknown-BI {font-family: STIXGeneral,'Cambria Math','Arial Unicode MS',serif; font-style: italic; font-weight: bold}
+.MJXc-TeX-ams-R {font-family: MJXc-TeX-ams-R,MJXc-TeX-ams-Rw}
+.MJXc-TeX-cal-B {font-family: MJXc-TeX-cal-B,MJXc-TeX-cal-Bx,MJXc-TeX-cal-Bw}
+.MJXc-TeX-frak-R {font-family: MJXc-TeX-frak-R,MJXc-TeX-frak-Rw}
+.MJXc-TeX-frak-B {font-family: MJXc-TeX-frak-B,MJXc-TeX-frak-Bx,MJXc-TeX-frak-Bw}
+.MJXc-TeX-math-BI {font-family: MJXc-TeX-math-BI,MJXc-TeX-math-BIx,MJXc-TeX-math-BIw}
+.MJXc-TeX-sans-R {font-family: MJXc-TeX-sans-R,MJXc-TeX-sans-Rw}
+.MJXc-TeX-sans-B {font-family: MJXc-TeX-sans-B,MJXc-TeX-sans-Bx,MJXc-TeX-sans-Bw}
+.MJXc-TeX-sans-I {font-family: MJXc-TeX-sans-I,MJXc-TeX-sans-Ix,MJXc-TeX-sans-Iw}
+.MJXc-TeX-script-R {font-family: MJXc-TeX-script-R,MJXc-TeX-script-Rw}
+.MJXc-TeX-type-R {font-family: MJXc-TeX-type-R,MJXc-TeX-type-Rw}
+.MJXc-TeX-cal-R {font-family: MJXc-TeX-cal-R,MJXc-TeX-cal-Rw}
+.MJXc-TeX-main-B {font-family: MJXc-TeX-main-B,MJXc-TeX-main-Bx,MJXc-TeX-main-Bw}
+.MJXc-TeX-main-I {font-family: MJXc-TeX-main-I,MJXc-TeX-main-Ix,MJXc-TeX-main-Iw}
+.MJXc-TeX-main-R {font-family: MJXc-TeX-main-R,MJXc-TeX-main-Rw}
+.MJXc-TeX-math-I {font-family: MJXc-TeX-math-I,MJXc-TeX-math-Ix,MJXc-TeX-math-Iw}
+.MJXc-TeX-size1-R {font-family: MJXc-TeX-size1-R,MJXc-TeX-size1-Rw}
+.MJXc-TeX-size2-R {font-family: MJXc-TeX-size2-R,MJXc-TeX-size2-Rw}
+.MJXc-TeX-size3-R {font-family: MJXc-TeX-size3-R,MJXc-TeX-size3-Rw}
+.MJXc-TeX-size4-R {font-family: MJXc-TeX-size4-R,MJXc-TeX-size4-Rw}
+@font-face {font-family: MJXc-TeX-ams-R; src: local('MathJax_AMS'), local('MathJax_AMS-Regular')}
+@font-face {font-family: MJXc-TeX-ams-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_AMS-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_AMS-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_AMS-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-cal-B; src: local('MathJax_Caligraphic Bold'), local('MathJax_Caligraphic-Bold')}
+@font-face {font-family: MJXc-TeX-cal-Bx; src: local('MathJax_Caligraphic'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-cal-Bw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Bold.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Bold.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Bold.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-frak-R; src: local('MathJax_Fraktur'), local('MathJax_Fraktur-Regular')}
+@font-face {font-family: MJXc-TeX-frak-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-frak-B; src: local('MathJax_Fraktur Bold'), local('MathJax_Fraktur-Bold')}
+@font-face {font-family: MJXc-TeX-frak-Bx; src: local('MathJax_Fraktur'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-frak-Bw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Bold.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Bold.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Bold.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-math-BI; src: local('MathJax_Math BoldItalic'), local('MathJax_Math-BoldItalic')}
+@font-face {font-family: MJXc-TeX-math-BIx; src: local('MathJax_Math'); font-weight: bold; font-style: italic}
+@font-face {font-family: MJXc-TeX-math-BIw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-BoldItalic.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-BoldItalic.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-BoldItalic.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-sans-R; src: local('MathJax_SansSerif'), local('MathJax_SansSerif-Regular')}
+@font-face {font-family: MJXc-TeX-sans-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-sans-B; src: local('MathJax_SansSerif Bold'), local('MathJax_SansSerif-Bold')}
+@font-face {font-family: MJXc-TeX-sans-Bx; src: local('MathJax_SansSerif'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-sans-Bw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Bold.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Bold.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Bold.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-sans-I; src: local('MathJax_SansSerif Italic'), local('MathJax_SansSerif-Italic')}
+@font-face {font-family: MJXc-TeX-sans-Ix; src: local('MathJax_SansSerif'); font-style: italic}
+@font-face {font-family: MJXc-TeX-sans-Iw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Italic.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Italic.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Italic.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-script-R; src: local('MathJax_Script'), local('MathJax_Script-Regular')}
+@font-face {font-family: MJXc-TeX-script-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Script-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Script-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Script-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-type-R; src: local('MathJax_Typewriter'), local('MathJax_Typewriter-Regular')}
+@font-face {font-family: MJXc-TeX-type-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Typewriter-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Typewriter-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Typewriter-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-cal-R; src: local('MathJax_Caligraphic'), local('MathJax_Caligraphic-Regular')}
+@font-face {font-family: MJXc-TeX-cal-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-main-B; src: local('MathJax_Main Bold'), local('MathJax_Main-Bold')}
+@font-face {font-family: MJXc-TeX-main-Bx; src: local('MathJax_Main'); font-weight: bold}
+@font-face {font-family: MJXc-TeX-main-Bw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Bold.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Bold.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Bold.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-main-I; src: local('MathJax_Main Italic'), local('MathJax_Main-Italic')}
+@font-face {font-family: MJXc-TeX-main-Ix; src: local('MathJax_Main'); font-style: italic}
+@font-face {font-family: MJXc-TeX-main-Iw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Italic.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-main-R; src: local('MathJax_Main'), local('MathJax_Main-Regular')}
+@font-face {font-family: MJXc-TeX-main-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-math-I; src: local('MathJax_Math Italic'), local('MathJax_Math-Italic')}
+@font-face {font-family: MJXc-TeX-math-Ix; src: local('MathJax_Math'); font-style: italic}
+@font-face {font-family: MJXc-TeX-math-Iw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-Italic.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-size1-R; src: local('MathJax_Size1'), local('MathJax_Size1-Regular')}
+@font-face {font-family: MJXc-TeX-size1-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size1-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-size2-R; src: local('MathJax_Size2'), local('MathJax_Size2-Regular')}
+@font-face {font-family: MJXc-TeX-size2-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size2-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-size3-R; src: local('MathJax_Size3'), local('MathJax_Size3-Regular')}
+@font-face {font-family: MJXc-TeX-size3-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size3-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf') format('opentype')}
+@font-face {font-family: MJXc-TeX-size4-R; src: local('MathJax_Size4'), local('MathJax_Size4-Regular')}
+@font-face {font-family: MJXc-TeX-size4-Rw; src /*1*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size4-Regular.eot'); src /*2*/: url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff') format('woff'), url('http://cdn.bootcss.com/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf') format('opentype')}
+</style></head>
+
+<body><div id="MathJax_Message" style="display: none;"></div>
+
+
+
+  <div class="book without-animation with-summary   font-size-2 font-family-0" data-basepath=".">
+
+    <div class="book-summary"><div class="book-search" role="search"><input type="search" class="form-control" placeholder="Type to search"></div>
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="https://m-clark.github.io/docs/sem/" title="Structural Equation Models"><span style="font-size:125%; font-variant:small-caps; font-style:italic; color:#1f65b7">Structural Equation Models</span></a></li>
+
+<li class="divider"></li>
+<li><a href="http://m-clark.github.io/docs/sem/index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="http://m-clark.github.io/docs/sem/preface.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="" data-path="preface.html"><a href="http://m-clark.github.io/docs/sem/preface.html#prerequisites"><i class="fa fa-check"></i>Prerequisites</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="preface.html"><a href="http://m-clark.github.io/docs/sem/preface.html#statistical"><i class="fa fa-check"></i>Statistical</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="http://m-clark.github.io/docs/sem/preface.html#programming"><i class="fa fa-check"></i>Programming</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="http://m-clark.github.io/docs/sem/introduction.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="http://m-clark.github.io/docs/sem/introduction.html#outline"><i class="fa fa-check"></i>Outline</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="introduction.html"><a href="http://m-clark.github.io/docs/sem/introduction.html#graphical-models"><i class="fa fa-check"></i>Graphical Models</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="http://m-clark.github.io/docs/sem/introduction.html#latent-variables"><i class="fa fa-check"></i>Latent Variables</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="http://m-clark.github.io/docs/sem/introduction.html#sem"><i class="fa fa-check"></i>SEM</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="http://m-clark.github.io/docs/sem/introduction.html#others"><i class="fa fa-check"></i>Others</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="http://m-clark.github.io/docs/sem/introduction.html#programming-language-choice"><i class="fa fa-check"></i>Programming Language Choice</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="http://m-clark.github.io/docs/sem/introduction.html#setup"><i class="fa fa-check"></i>Setup</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html"><i class="fa fa-check"></i>Introduction to R</a><ul>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#getting-started"><i class="fa fa-check"></i>Getting Started</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#installation"><i class="fa fa-check"></i>Installation</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#packages"><i class="fa fa-check"></i>Packages</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#rstudio"><i class="fa fa-check"></i>RStudio</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#importing-data"><i class="fa fa-check"></i>Importing Data</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#key-things-to-know-about-r"><i class="fa fa-check"></i>Key things to know about R</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#r-is-a-programming-language-not-a-stats-package"><i class="fa fa-check"></i>R is a programming language, not a ‘stats package’</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#never-ask-if-r-can-do-what-you-want.-it-can."><i class="fa fa-check"></i>Never ask if R can do what you want. It can.</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#main-components-script-console-graphics-device"><i class="fa fa-check"></i>Main components: script, console, graphics device</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#r-is-easy-to-use-but-difficult-to-master."><i class="fa fa-check"></i>R is easy to use, but difficult to master.</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#object-oriented"><i class="fa fa-check"></i>Object-oriented</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#case-sensitive"><i class="fa fa-check"></i>Case sensitive</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#the-lavaan-package"><i class="fa fa-check"></i>The lavaan package</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#getting-help"><i class="fa fa-check"></i>Getting help</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#moving-forward"><i class="fa fa-check"></i>Moving forward</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#exercises"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-r.html"><a href="http://m-clark.github.io/docs/sem/introduction-to-r.html#summary"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html"><i class="fa fa-check"></i>Graphical Models</a><ul>
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#directed-graphs"><i class="fa fa-check"></i>Directed Graphs</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#standard-linear-model"><i class="fa fa-check"></i>Standard linear model</a></li>
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#path-analysis"><i class="fa fa-check"></i>Path Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#bayesian-networks"><i class="fa fa-check"></i>Bayesian Networks</a></li>
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#undirected-graphs"><i class="fa fa-check"></i>Undirected Graphs</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#network-analysis"><i class="fa fa-check"></i>Network analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#summary-1"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="graphical-models-1.html"><a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#r-packages-used"><i class="fa fa-check"></i>R packages used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html"><i class="fa fa-check"></i>Latent Variables</a><ul>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#dimension-reductioncompression"><i class="fa fa-check"></i>Dimension Reduction/Compression</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#principal-components-analysis"><i class="fa fa-check"></i>Principal Components Analysis</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#factor-analysis"><i class="fa fa-check"></i>Factor Analysis</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#other-techniques"><i class="fa fa-check"></i>Other Techniques</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#summary-2"><i class="fa fa-check"></i>Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#constructs-and-measurement-models" title="Constructs and Measurement Models"><i class="fa fa-check"></i>Constructs and Measurement Models</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#other-issues-in-factor-analysis"><i class="fa fa-check"></i>Other issues in Factor Analysis</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#some-specific-factor-models-in-sem"><i class="fa fa-check"></i>Some specific factor models in SEM</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#scale-development"><i class="fa fa-check"></i>Scale development</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#factor-scores"><i class="fa fa-check"></i>Factor Scores</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#terminology"><i class="fa fa-check"></i>Terminology</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#some-other-uses-of-latent-variables" title="Some Other Uses of Latent Variables"><i class="fa fa-check"></i>Some Other Uses of Latent Variables</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#summary-3"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="latent-variables-1.html"><a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#r-packages-used-1"><i class="fa fa-check"></i>R packages used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html"><i class="fa fa-check"></i>Structural Equation Modeling</a><ul>
+<li class="chapter active" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#measurement-model"><i class="fa fa-check"></i>Measurement Model</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#structural-model"><i class="fa fa-check"></i>Structural Model</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#the-process"><i class="fa fa-check"></i>The Process</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#initial-considerations-of-complexity"><i class="fa fa-check"></i>Initial Considerations of Complexity</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#steps-to-take"><i class="fa fa-check"></i>Steps to Take</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#sem-example"><i class="fa fa-check"></i>SEM Example</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#issues-in-sem"><i class="fa fa-check"></i>Issues in SEM</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#identification"><i class="fa fa-check"></i>Identification</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fit"><i class="fa fa-check"></i>Fit</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#model-comparison"><i class="fa fa-check"></i>Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#prediction"><i class="fa fa-check"></i>Prediction</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#observed-covariates"><i class="fa fa-check"></i>Observed covariates</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#interactions"><i class="fa fa-check"></i>Interactions</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#estimation"><i class="fa fa-check"></i>Estimation</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#missing-data"><i class="fa fa-check"></i>Missing data</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#other-sem-approaches"><i class="fa fa-check"></i>Other SEM approaches</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#how-to-fool-yourself-with-sem"><i class="fa fa-check"></i>How to fool yourself with SEM</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#sample-size"><i class="fa fa-check"></i>Sample size</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#poor-data"><i class="fa fa-check"></i>Poor data</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#naming-a-latent-variable-doesnt-mean-it-exists"><i class="fa fa-check"></i>Naming a latent variable doesn’t mean it exists</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#ignoring-diagnostics"><i class="fa fa-check"></i>Ignoring diagnostics</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#ignoring-performance"><i class="fa fa-check"></i>Ignoring performance</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#summary-4"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#terminology-1"><i class="fa fa-check"></i>Terminology</a></li>
+<li class="chapter" data-level="" data-path="structural-equation-modeling.html"><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#r-packages-used-2"><i class="fa fa-check"></i>R Packages Used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html"><i class="fa fa-check"></i>Latent Growth Curves</a><ul>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#random-effects"><i class="fa fa-check"></i>Random effects</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#model-formality"><i class="fa fa-check"></i>Model formality</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#random-effects-in-sem"><i class="fa fa-check"></i>Random Effects in SEM</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#simulating-random-effects"><i class="fa fa-check"></i>Simulating Random Effects</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#running-a-growth-curve-model"><i class="fa fa-check"></i>Running a Growth Curve Model</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#thinking-more-generally-about-regression" title="Thinking more generally about regression"><i class="fa fa-check"></i>Thinking more generally about regression</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#more-on-lgc"><i class="fa fa-check"></i>More on LGC</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#lgc-are-non-standard-sem"><i class="fa fa-check"></i>LGC are non-standard SEM</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#residual-correlations"><i class="fa fa-check"></i>Residual correlations</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#nonlinear-time-effect"><i class="fa fa-check"></i>Nonlinear time effect</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#growth-mixture-models"><i class="fa fa-check"></i>Growth Mixture Models</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#other-covariates"><i class="fa fa-check"></i>Other covariates</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#some-differences-between-mixed-models-and-growth-curves" title="Some Differences between Mixed Models and Growth Curves"><i class="fa fa-check"></i>Some Differences between Mixed Models and Growth Curves</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#random-slopes"><i class="fa fa-check"></i>Random slopes</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#wide-vs.long"><i class="fa fa-check"></i>Wide vs.&nbsp;long</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#sample-size-1"><i class="fa fa-check"></i>Sample size</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#number-of-time-points"><i class="fa fa-check"></i>Number of time points</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#balance"><i class="fa fa-check"></i>Balance</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#numbering-the-time-points"><i class="fa fa-check"></i>Numbering the time points</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#other-stuff"><i class="fa fa-check"></i>Other stuff</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#summary-5"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="latent-growth-curves.html"><a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html#r-packages-used-3"><i class="fa fa-check"></i>R Packages Used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html"><i class="fa fa-check"></i>Mixture Models</a><ul>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#a-motivating-example"><i class="fa fa-check"></i>A Motivating Example</a></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#create-clustered-data"><i class="fa fa-check"></i>Create Clustered Data</a></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#mixture-modeling-with-old-faithful"><i class="fa fa-check"></i>Mixture modeling with Old Faithful</a></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#sem-and-latent-categorical-variables" title="SEM and Latent Categorical Variables"><i class="fa fa-check"></i>SEM and Latent Categorical Variables</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#latent-categories-vs.multi-group-analysis"><i class="fa fa-check"></i>Latent Categories vs.&nbsp;Multi-group Analysis</a></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#latent-trajectories"><i class="fa fa-check"></i>Latent Trajectories</a></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#estimation-1"><i class="fa fa-check"></i>Estimation</a></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#terminology-in-sem"><i class="fa fa-check"></i>Terminology in SEM</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#summary-6"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="mixture-models.html"><a href="http://m-clark.github.io/docs/sem/mixture-models.html#r-packages-used-4"><i class="fa fa-check"></i>R Packages Used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html"><i class="fa fa-check"></i>Item Response Theory</a><ul>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#standard-models"><i class="fa fa-check"></i>Standard Models</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#one-parameter-model"><i class="fa fa-check"></i>One Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#two-parameter-model"><i class="fa fa-check"></i>Two Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#three-parameter-model"><i class="fa fa-check"></i>Three Parameter Model</a></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#four-parameter-model"><i class="fa fa-check"></i>Four Parameter Model</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#other-irt-models"><i class="fa fa-check"></i>Other IRT Models</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#additional-covariates"><i class="fa fa-check"></i>Additional covariates</a></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#graded-response-model"><i class="fa fa-check"></i>Graded Response Model</a></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#multidimensional-irt"><i class="fa fa-check"></i>Multidimensional IRT</a></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#other-irt"><i class="fa fa-check"></i>Other IRT</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#summary-7"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#irt-terminology"><i class="fa fa-check"></i>IRT Terminology</a></li>
+<li class="chapter" data-level="" data-path="item-response-theory.html"><a href="http://m-clark.github.io/docs/sem/item-response-theory.html#r-packages-used-5"><i class="fa fa-check"></i>R Packages Used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="topic-models.html"><a href="http://m-clark.github.io/docs/sem/topic-models.html"><i class="fa fa-check"></i>Topic Models</a><ul>
+<li class="chapter" data-level="" data-path="topic-models.html"><a href="http://m-clark.github.io/docs/sem/topic-models.html#latent-dirichlet-allocation"><i class="fa fa-check"></i>Latent Dirichlet Allocation</a></li>
+<li class="chapter" data-level="" data-path="topic-models.html"><a href="http://m-clark.github.io/docs/sem/topic-models.html#analysis"><i class="fa fa-check"></i>Analysis</a></li>
+<li class="chapter" data-level="" data-path="topic-models.html"><a href="http://m-clark.github.io/docs/sem/topic-models.html#summary-of-topic-models"><i class="fa fa-check"></i>Summary of Topic Models</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="http://m-clark.github.io/docs/sem/bayesian-nonparametric-models.html"><i class="fa fa-check"></i>Bayesian Nonparametric Models</a><ul>
+<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="http://m-clark.github.io/docs/sem/bayesian-nonparametric-models.html#chinese-restaurant-process"><i class="fa fa-check"></i>Chinese Restaurant Process</a></li>
+<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="http://m-clark.github.io/docs/sem/bayesian-nonparametric-models.html#indian-buffet-process"><i class="fa fa-check"></i>Indian Buffet Process</a></li>
+<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="http://m-clark.github.io/docs/sem/bayesian-nonparametric-models.html#summary-8"><i class="fa fa-check"></i>Summary</a></li>
+<li class="chapter" data-level="" data-path="bayesian-nonparametric-models.html"><a href="http://m-clark.github.io/docs/sem/bayesian-nonparametric-models.html#r-packages-used-6"><i class="fa fa-check"></i>R packages used</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="exercises-1.html"><a href="http://m-clark.github.io/docs/sem/exercises-1.html"><i class="fa fa-check"></i>Exercises</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html"><i class="fa fa-check"></i>Appendix</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#data-set-descriptions"><i class="fa fa-check"></i>Data Set Descriptions</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#mcclelland"><i class="fa fa-check"></i>McClelland</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#national-longitudinal-survey-of-youth-1997-nlsy97"><i class="fa fa-check"></i>National Longitudinal Survey of Youth (1997, NLSY97)</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#wheaton-1977-data"><i class="fa fa-check"></i>Wheaton 1977 data</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#harman-5"><i class="fa fa-check"></i>Harman 5</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#big-five"><i class="fa fa-check"></i>Big Five</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#old-faithful"><i class="fa fa-check"></i>Old Faithful</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#harman-1974"><i class="fa fa-check"></i>Harman 1974</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#marsh-hocevar-1985"><i class="fa fa-check"></i>Marsh &amp; Hocevar 1985</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#abortion-attitudes"><i class="fa fa-check"></i>Abortion Attitudes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#terminology-in-sem-1"><i class="fa fa-check"></i>Terminology in SEM</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#problematic-andor-not-very-useful-terms"><i class="fa fa-check"></i>Problematic and/or not very useful terms</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#lavaan-output-explained"><i class="fa fa-check"></i>Lavaan Output Explained</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#code-examples"><i class="fa fa-check"></i>Code Examples</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#factor-analysis-via-maximum-likelihood"><i class="fa fa-check"></i>Factor Analysis via Maximum Likelihood</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#parallel-process-example"><i class="fa fa-check"></i>Parallel Process Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#causal-bias"><i class="fa fa-check"></i>Causal Bias</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#prediction-1"><i class="fa fa-check"></i>Prediction</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#chance"><i class="fa fa-check"></i>Chance</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#other"><i class="fa fa-check"></i>Other</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#some-references"><i class="fa fa-check"></i>Some references</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#software-revisited"><i class="fa fa-check"></i>Software Revisited</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#mplus"><i class="fa fa-check"></i>Mplus</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#r"><i class="fa fa-check"></i>R</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#stata"><i class="fa fa-check"></i>Stata</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#other-2"><i class="fa fa-check"></i>Other</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#resources"><i class="fa fa-check"></i>Resources</a><ul style="display: none;">
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#graphical-models-2"><i class="fa fa-check"></i>Graphical Models</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#potential-outcomes"><i class="fa fa-check"></i>Potential Outcomes</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#measurement-models-including-irt"><i class="fa fa-check"></i>Measurement Models (including IRT)</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#applied-sem"><i class="fa fa-check"></i>Applied SEM</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#nonparametric-models"><i class="fa fa-check"></i>Nonparametric models</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#lavaan"><i class="fa fa-check"></i>lavaan</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="http://m-clark.github.io/docs/sem/appendix.html#other-sem-tools-in-r"><i class="fa fa-check"></i>Other SEM tools in R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="other-3.html"><a href="http://m-clark.github.io/docs/sem/other-3.html"><i class="fa fa-check"></i>Other</a></li>
+<li><a href="http://m-clark.github.io/docs/sem/section-1.html#section-1"></a></li>
+<li class="divider"></li>
+<li><a href="https://m-clark.github.io/" target="blank" style="font-size:150%; font-variant:small-caps; color:#1f65b7; margin: 0 auto;">Michael Clark</a></li><br><br>
+<li><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0; display:block; margin: 0 auto;" src="./Graphical and Latent Variable Modeling_files/80x15.png"></a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body fixed">
+      <div class="body-inner">
+        <div class="book-header fixed" role="navigation" style="background-color: rgb(255, 255, 255);">
+          <a class="btn pull-left js-toolbar-action" aria-label="" href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#"><i class="fa fa-align-justify"></i></a><a class="btn pull-left js-toolbar-action" aria-label="Search" href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#"><i class="fa fa-search"></i></a><div class="dropdown pull-right  js-toolbar-action"><a class="btn toggle-dropdown" aria-label="Share" href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#"><i class="fa fa-share-alt"></i></a><div class="dropdown-menu dropdown-left"><div class="dropdown-caret"><span class="caret-outer"></span><span class="caret-inner"></span></div><div class="buttons"><button class="button size-5 ">Facebook</button><button class="button size-5 ">Google+</button><button class="button size-5 ">Twitter</button><button class="button size-5 ">Weibo</button><button class="button size-5 ">Instapaper</button></div></div></div><a class="btn pull-right js-toolbar-action" aria-label="" href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#"><i class="fa fa-facebook"></i></a><a class="btn pull-right js-toolbar-action" aria-label="" href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#"><i class="fa fa-twitter"></i></a><div class="dropdown pull-left font-settings js-toolbar-action"><a class="btn toggle-dropdown" aria-label="Font Settings" href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#"><i class="fa fa-font"></i></a><div class="dropdown-menu dropdown-right"><div class="dropdown-caret"><span class="caret-outer"></span><span class="caret-inner"></span></div><div class="buttons"><button class="button size-2 font-reduce">A</button><button class="button size-2 font-enlarge">A</button></div><div class="buttons"><button class="button size-2 ">Serif</button><button class="button size-2 ">Sans</button></div><div class="buttons"><button class="button size-3 ">White</button><button class="button size-3 ">Sepia</button><button class="button size-3 ">Night</button></div></div></div><a class="btn pull-left js-toolbar-action" aria-label="Edit" href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#"><i class="fa fa-edit"></i></a><h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="http://m-clark.github.io/docs/sem/"><span style="font-size:150%; font-variant:small-caps; font-style:italic; color:#1f65b7">Graphical and Latent Variable Modeling</span></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="structural-equation-modeling" class="section level1">
+<h1>Structural Equation Modeling</h1>
+<p>Structural equation modeling combines the path analytic and latent variable techniques together to allow for regression models among latent and observed variables. Any model, even the SLiM, can be seen as some form of SEM, or graphical model more generally. However, the term is typically reserved for the combination of latent and observed variables in a model, often with causal implications<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fn40" class="footnoteRef" id="fnref40"><sup>40</sup></a>.</p>
+<div id="measurement-model" class="section level2">
+<h2>Measurement Model</h2>
+<p>The <span class="emph">measurement model</span> refers to the latent variable models, i.e.&nbsp;factor analysis, and typical practice in SEM is to investigate these separately and first. The reason is that one wants to make sure that the measurement model holds before going any further with the underlying constructs. For example, for one’s sample of data one might detect two latent variables work better for a set of indicators, or might find that some indicators are performing poorly. Adjustments might then be made before moving on to the final model.</p>
+</div>
+<div id="structural-model" class="section level2">
+<h2>Structural Model</h2>
+<p>The <span class="emph">structural model</span> specifies the regression paths among latent and observed variables that do not serve as indicators. It can become quite complex, but at this stage one can lean on what they were exposed to with path analysis, as conceptually we’re in the same place, except now some variables may be latent.</p>
+</div>
+<div id="the-process" class="section level2">
+<h2>The Process</h2>
+<div id="initial-considerations-of-complexity" class="section level3">
+<h3>Initial Considerations of Complexity</h3>
+<p>Before even beginning a road to SEM, do you have enough data?</p>
+<blockquote>
+<p><span style="font-variant: small-caps;">SEM is a large sample technique</span></p>
+</blockquote>
+<p>You will even with simple models likely be estimating a couple dozen parameters, and it’s assumed that there are noisy measures and generally small effects when present. As a comparison, if you were running a standard regression in similar scenarios, how much data would you feel comfortable with if you were using a model with 20+ predictors? In SEM it can be even more difficult, where latent variables with less than ideal loadings on few items might require a couple hundred observations for just a single measurement model. In addition, as noted previously, less reliable measures will only hurt your ability to detect the relationships among variables. If you are conducting multigroup analysis, you must consider an SEM from the standpoint of the sample size for the smallest group.</p>
+<p>Because of the inherent complexity of SEM, many run SEM models that are overly simple, and actually misspecified, due to the fact that key variables, even ones that were collected and available in the data, are left out<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fn41" class="footnoteRef" id="fnref41"><sup>41</sup></a>. Sometimes models are so complex they are left out because it would be difficult to even know what all should be pointing to what. In other cases I’ve seen almost a hundred parameters estimated with maybe only 200 observations<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fn42" class="footnoteRef" id="fnref42"><sup>42</sup></a>. The gist is that SEM is not always the right tool, even if conceptually it may be considered for a model. As flexible as it is, it is also quite restrictive in other respects, and may simply be impractical to model key aspects of the data.</p>
+</div>
+<div id="steps-to-take" class="section level3">
+<h3>Steps to Take</h3>
+<p>Assuming SEM is the right tool for the job, the first analytical step is to look at <em>all</em> the observed variables on their own by examining their descriptive statistics. This also helps with debugging, such that you can find data entry errors and other issues before they get lost amidst the sea of output from an SEM result. And you certainly should know your data well enough to know that a value of 50 isn’t possible for a scale that goes 0-40.</p>
+<p>Next comes an examination of the correlations, possibly broken up to be more digestible or reflect item scales. SEM does not supernaturally produce correlations in your data, it works on the correlations that are there. If there are very low correlations, you will have a poor fit when you do the SEM that assumes stronger ones, and possibly even estimation problems. This should not in any way be surprising.</p>
+<p>Now consider your measurement models. This step itself is a two stage process (at least). First, consider every latent variable on its own, i.e.&nbsp;examine whether the single factor models hold up. Then you might specify correlations among those that are excepted to correlate in some fashion (whether it is a regression relationship or not doesn’t matter, don’t worry with the structural model), maybe even with observed variables. Again, if you are spotting potential issues here, they aren’t going to go away later, and in fact, the problems can actually get worse in terms of fit with the structural component. Note that if you’re using <span class="pack">lavaan</span> (or Mplus), you can simply write the syntax for a model with constraints specifying zero correlations, then just comment those lines out (recall that latent variables are allowed to correlate by default).</p>
+<p>Now you are ready for the SEM, though by this stage you should already be pretty knowledgeable about what to expect. You should always have multiple models, and I can think of at least three in any SEM setting. The first should be the simplest-yet-still-theoretically-plausible model. This would likely resemble a standard regression model, though including latent variables, and possibly multiple outcomes (but at this stage leave the outcomes uncorrelated and considered separately). The other model is the complex one that might include indirect effects and other posited correlations, i.e.&nbsp;the one that drove you to do the analysis in the first place. Ideally there would also be a model based on a competing theory, and if so, you should definitely run that. And finally, a data driven model. Perhaps your initial explorations of the data, or your interpretation of one of the other two models, suggested something else going on. Try it out, just be clear about it being more exploratory in any results summary. Theories are great and all, but nature typically proves more interesting, and you don’t want to ignore intriguing results just because they didn’t align with theory.</p>
+<p>In summary:</p>
+<ul>
+<li>Have a sense of complexity (vs.&nbsp;sample size) and consider other modeling techniques</li>
+<li>Develop a good understanding of <em>all</em> observed variables</li>
+<li>Inspect correlations</li>
+<li>Examine measurement models</li>
+<li>Conduct SEM with multiple competing models</li>
+</ul>
+<p>SEM works best with strong causal theory and settings where those claims can be tested. Such a setting is not nearly as common as SEM is used in practice. While SEM can be seen as an extension of other common modeling approaches and used primarily for that, one should think hard before using it, and know that there is no data situation that requires SEM.</p>
+</div>
+</div>
+<div id="sem-example" class="section level2">
+<h2>SEM Example</h2>
+<p>The following model is a classic example from Wheaton et al. (1977), which used longitudinal data to develop a model of the stability of alienation from 1967 to 1971, accounting for socioeconomic status as a covariate. Each of the three factors have two indicator variables, SES in 1966 is measured by education and occupational status in 1966 and alienation in both years is measured by powerlessness and anomie (a feeling of being lost with regard to society). The structural component of the model hypothesizes that SES in 1966 influences both alienation in 1967 and 1971 and alienation in 1967 influences the same measure in 1971. We also let the disturbances correlate from one time point to the next.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># In this example we import the covariance matrix</span>
+wheaton.cov =<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">read.csv</span>(<span class="st">'data/wheaton_cov.csv'</span>, <span class="dt">row.names=</span><span class="dv">1</span>))
+
+<span class="co"># the model</span>
+wheaton.model =<span class="st"> '</span>
+<span class="st">  # measurement model</span>
+<span class="st">    ses     =~ education + sei</span>
+<span class="st">    alien67 =~ anomia67 + powerless67</span>
+<span class="st">    alien71 =~ anomia71 + powerless71</span>
+<span class="st"> </span>
+<span class="st">  # structural model</span>
+<span class="st">    alien71 ~ aa*alien67 + ses</span>
+<span class="st">    alien67 ~ sa*ses</span>
+<span class="st"> </span>
+<span class="st">  # correlated residuals</span>
+<span class="st">    anomia67 ~~ anomia71</span>
+<span class="st">    powerless67 ~~ powerless71</span>
+
+<span class="st">  # Indirect effect</span>
+<span class="st">    IndirectEffect := sa*aa</span>
+<span class="st">'</span>
+
+alienation &lt;-<span class="st"> </span><span class="kw">sem</span>(wheaton.model, <span class="dt">sample.cov=</span>wheaton.cov, <span class="dt">sample.nobs=</span><span class="dv">932</span>)</code></pre></div>
+<div style="width:100%; margin:auto auto;">
+<div id="htmlwidget-17b11bc6a52a78809f0f" style="width:100%;height:500px;" class="grViz html-widget html-widget-static-bound"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
+
+<!-- Generated by graphviz version 2.38.0 (20140413.2041)
+ -->
+<!-- Title: %3 Pages: 1 -->
+<svg viewBox="0.00 0.00 476.00 588.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 100%; height: 100%;">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 584)">
+<title>%3</title>
+<!-- Alien67 -->
+<g id="node1" class="node"><title>Alien67</title>
+<ellipse fill="#9e911b" stroke="#bfbfbf" cx="135" cy="-227" rx="45" ry="45"></ellipse>
+<text text-anchor="middle" x="135" y="-224" font-family="Times,serif" font-size="10.00" fill="white">Alien67</text>
+</g>
+<!-- Alien71 -->
+<g id="node2" class="node"><title>Alien71</title>
+<ellipse fill="#9e1b34" stroke="#bfbfbf" cx="333" cy="-227" rx="45" ry="45"></ellipse>
+<text text-anchor="middle" x="333" y="-224" font-family="Times,serif" font-size="10.00" fill="white">Alien71</text>
+</g>
+<!-- Alien67&#45;&gt;Alien71 -->
+<g id="edge3" class="edge"><title>Alien67-&gt;Alien71</title>
+<path fill="none" stroke="#c9be85" d="M180.246,-227C212.782,-227 245.317,-227 277.852,-227"></path>
+<polygon fill="#c9be85" stroke="#c9be85" points="277.95,-230.5 287.95,-227 277.949,-223.5 277.95,-230.5"></polygon>
+</g>
+<!-- anomie_67 -->
+<g id="node7" class="node"><title>anomie_67</title>
+<polygon fill="none" stroke="#9e911b" points="135,-109 63,-109 63,-37 135,-37 135,-109"></polygon>
+<text text-anchor="middle" x="99" y="-77.2" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">Anomie</text>
+<text text-anchor="middle" x="99" y="-60.4" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">1967</text>
+</g>
+<!-- Alien67&#45;&gt;anomie_67 -->
+<g id="edge6" class="edge"><title>Alien67-&gt;anomie_67</title>
+<path fill="none" stroke="#9e911b" d="M124.78,-182.849C120.05,-162.877 114.432,-139.157 109.65,-118.965"></path>
+<polygon fill="#9e911b" stroke="#9e911b" points="113.016,-117.993 107.306,-109.069 106.205,-119.606 113.016,-117.993"></polygon>
+</g>
+<!-- powerless_67 -->
+<g id="node8" class="node"><title>powerless_67</title>
+<polygon fill="none" stroke="#9e911b" points="225,-109 153,-109 153,-37 225,-37 225,-109"></polygon>
+<text text-anchor="middle" x="189" y="-77.2" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">Powerless</text>
+<text text-anchor="middle" x="189" y="-60.4" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">1967</text>
+</g>
+<!-- Alien67&#45;&gt;powerless_67 -->
+<g id="edge7" class="edge"><title>Alien67-&gt;powerless_67</title>
+<path fill="none" stroke="#9e911b" d="M149.756,-184.465C157.007,-164.053 165.754,-139.433 173.148,-118.621"></path>
+<polygon fill="#9e911b" stroke="#9e911b" points="176.498,-119.646 176.548,-109.051 169.902,-117.302 176.498,-119.646"></polygon>
+</g>
+<!-- Alien71var -->
+<g id="node4" class="node"><title>Alien71var</title>
+<polygon fill="none" stroke="none" points="468,-245 414,-245 414,-209 468,-209 468,-245"></polygon>
+</g>
+<!-- Alien71&#45;&gt;Alien71var -->
+<g id="edge12" class="edge"><title>Alien71-&gt;Alien71var</title>
+<path fill="none" stroke="#7f7f7f" d="M388.223,-227C396.812,-227 405.401,-227 413.99,-227"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="388.141,-223.5 378.141,-227 388.141,-230.5 388.141,-223.5"></polygon>
+</g>
+<!-- anomie_71 -->
+<g id="node9" class="node"><title>anomie_71</title>
+<polygon fill="none" stroke="#9e1b34" points="315,-109 243,-109 243,-37 315,-37 315,-109"></polygon>
+<text text-anchor="middle" x="279" y="-77.2" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">Anomie</text>
+<text text-anchor="middle" x="279" y="-60.4" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">1971</text>
+</g>
+<!-- Alien71&#45;&gt;anomie_71 -->
+<g id="edge8" class="edge"><title>Alien71-&gt;anomie_71</title>
+<path fill="none" stroke="#9e1b34" d="M318.244,-184.465C310.993,-164.053 302.246,-139.433 294.852,-118.621"></path>
+<polygon fill="#9e1b34" stroke="#9e1b34" points="298.098,-117.302 291.452,-109.051 291.502,-119.646 298.098,-117.302"></polygon>
+</g>
+<!-- powerless_71 -->
+<g id="node10" class="node"><title>powerless_71</title>
+<polygon fill="none" stroke="#9e1b34" points="405,-109 333,-109 333,-37 405,-37 405,-109"></polygon>
+<text text-anchor="middle" x="369" y="-77.2" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">Powerless</text>
+<text text-anchor="middle" x="369" y="-60.4" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">1971</text>
+</g>
+<!-- Alien71&#45;&gt;powerless_71 -->
+<g id="edge9" class="edge"><title>Alien71-&gt;powerless_71</title>
+<path fill="none" stroke="#9e1b34" d="M343.22,-182.849C347.95,-162.877 353.568,-139.157 358.35,-118.965"></path>
+<polygon fill="#9e1b34" stroke="#9e1b34" points="361.795,-119.606 360.694,-109.069 354.984,-117.993 361.795,-119.606"></polygon>
+</g>
+<!-- Alien67var -->
+<g id="node3" class="node"><title>Alien67var</title>
+<polygon fill="none" stroke="none" points="54,-245 0,-245 0,-209 54,-209 54,-245"></polygon>
+</g>
+<!-- Alien67var&#45;&gt;Alien67 -->
+<g id="edge11" class="edge"><title>Alien67var-&gt;Alien67</title>
+<path fill="none" stroke="#7f7f7f" d="M54.4219,-227C62.9433,-227 71.4647,-227 79.9862,-227"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="79.9896,-230.5 89.9896,-227 79.9895,-223.5 79.9896,-230.5"></polygon>
+</g>
+<!-- SES -->
+<g id="node5" class="node"><title>SES</title>
+<ellipse fill="#1b4d9e" stroke="#bfbfbf" cx="234" cy="-353" rx="45" ry="45"></ellipse>
+<text text-anchor="middle" x="234" y="-350" font-family="Times,serif" font-size="10.00" fill="white">SES</text>
+</g>
+<!-- SES&#45;&gt;Alien67 -->
+<g id="edge1" class="edge"><title>SES-&gt;Alien67</title>
+<path fill="none" stroke="#5bc6cc" d="M206.16,-317.129C194.675,-302.744 181.253,-285.933 169.179,-270.81"></path>
+<polygon fill="#5bc6cc" stroke="#5bc6cc" points="171.606,-268.24 162.632,-262.609 166.136,-272.608 171.606,-268.24"></polygon>
+</g>
+<!-- SES&#45;&gt;Alien71 -->
+<g id="edge2" class="edge"><title>SES-&gt;Alien71</title>
+<path fill="none" stroke="#8c88b8" d="M261.84,-317.129C273.325,-302.744 286.747,-285.933 298.821,-270.81"></path>
+<polygon fill="#8c88b8" stroke="#8c88b8" points="301.864,-272.608 305.368,-262.609 296.394,-268.24 301.864,-272.608"></polygon>
+</g>
+<!-- SESvar -->
+<g id="node6" class="node"><title>SESvar</title>
+<polygon fill="none" stroke="none" points="153,-371 99,-371 99,-335 153,-335 153,-371"></polygon>
+</g>
+<!-- SESvar&#45;&gt;SES -->
+<g id="edge10" class="edge"><title>SESvar-&gt;SES</title>
+<path fill="none" stroke="#7f7f7f" d="M153.422,-353C161.943,-353 170.465,-353 178.986,-353"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="178.99,-356.5 188.99,-353 178.99,-349.5 178.99,-356.5"></polygon>
+</g>
+<!-- U1 -->
+<g id="node13" class="node"><title>U1</title>
+</g>
+<!-- anomie_67&#45;&gt;U1 -->
+<g id="edge15" class="edge"><title>anomie_67-&gt;U1</title>
+<path fill="none" stroke="#7f7f7f" d="M99,-26.8705C99,-13.3919 99,-1.9168 99,-1.05226"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="95.5001,-26.916 99,-36.916 102.5,-26.916 95.5001,-26.916"></polygon>
+</g>
+<!-- U2 -->
+<g id="node14" class="node"><title>U2</title>
+</g>
+<!-- powerless_67&#45;&gt;U2 -->
+<g id="edge16" class="edge"><title>powerless_67-&gt;U2</title>
+<path fill="none" stroke="#7f7f7f" d="M189,-26.8705C189,-13.3919 189,-1.9168 189,-1.05226"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="185.5,-26.916 189,-36.916 192.5,-26.916 185.5,-26.916"></polygon>
+</g>
+<!-- U3 -->
+<g id="node15" class="node"><title>U3</title>
+</g>
+<!-- anomie_71&#45;&gt;U3 -->
+<g id="edge17" class="edge"><title>anomie_71-&gt;U3</title>
+<path fill="none" stroke="#7f7f7f" d="M279,-26.8705C279,-13.3919 279,-1.9168 279,-1.05226"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="275.5,-26.916 279,-36.916 282.5,-26.916 275.5,-26.916"></polygon>
+</g>
+<!-- U4 -->
+<g id="node16" class="node"><title>U4</title>
+</g>
+<!-- powerless_71&#45;&gt;U4 -->
+<g id="edge18" class="edge"><title>powerless_71-&gt;U4</title>
+<path fill="none" stroke="#7f7f7f" d="M369,-26.8705C369,-13.3919 369,-1.9168 369,-1.05226"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="365.5,-26.916 369,-36.916 372.5,-26.916 365.5,-26.916"></polygon>
+</g>
+<!-- Edu -->
+<g id="node11" class="node"><title>Edu</title>
+<polygon fill="none" stroke="#1b4d9e" points="218,-543 146,-543 146,-471 218,-471 218,-543"></polygon>
+<text text-anchor="middle" x="182" y="-502.8" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">Edu</text>
+</g>
+<!-- Edu&#45;&gt;SES -->
+<g id="edge4" class="edge"><title>Edu-&gt;SES</title>
+<path fill="none" stroke="#1b4d9e" d="M197.316,-461.23C204.393,-440.543 212.748,-416.12 219.696,-395.811"></path>
+<polygon fill="#1b4d9e" stroke="#1b4d9e" points="193.986,-460.152 194.061,-470.746 200.609,-462.417 193.986,-460.152"></polygon>
+</g>
+<!-- SEI -->
+<g id="node12" class="node"><title>SEI</title>
+<polygon fill="none" stroke="#1b4d9e" points="308,-543 236,-543 236,-471 308,-471 308,-543"></polygon>
+<text text-anchor="middle" x="272" y="-502.8" font-family="Times,serif" font-size="14.00" fill="#7f7f7f">SEI</text>
+</g>
+<!-- SEI&#45;&gt;SES -->
+<g id="edge5" class="edge"><title>SEI-&gt;SES</title>
+<path fill="none" stroke="#1b4d9e" d="M260.708,-460.831C255.652,-440.607 249.719,-416.875 244.731,-396.922"></path>
+<polygon fill="#1b4d9e" stroke="#1b4d9e" points="257.366,-461.894 263.187,-470.746 264.157,-460.196 257.366,-461.894"></polygon>
+</g>
+<!-- U1&#45;&gt;U3 -->
+<g id="edge19" class="edge"><title>U1-&gt;U3</title>
+<path fill="none" stroke="#cccccc" d="M109.638,-5.31893C120.337,-9.88137 137.433,-16.4074 153,-19 184.565,-24.257 193.435,-24.257 225,-19 240.567,-16.4074 257.663,-9.88137 268.362,-5.31893"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="110.85,-2.02651 100.294,-1.12398 107.983,-8.41253 110.85,-2.02651"></polygon>
+<polygon fill="#cccccc" stroke="#cccccc" points="270.017,-8.41253 277.706,-1.12398 267.15,-2.02651 270.017,-8.41253"></polygon>
+</g>
+<!-- U2&#45;&gt;U4 -->
+<g id="edge20" class="edge"><title>U2-&gt;U4</title>
+<path fill="none" stroke="#cccccc" d="M199.638,-5.31893C210.337,-9.88137 227.433,-16.4074 243,-19 274.565,-24.257 283.435,-24.257 315,-19 330.567,-16.4074 347.663,-9.88137 358.362,-5.31893"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="200.85,-2.02651 190.294,-1.12398 197.983,-8.41253 200.85,-2.02651"></polygon>
+<polygon fill="#cccccc" stroke="#cccccc" points="360.017,-8.41253 367.706,-1.12398 357.15,-2.02651 360.017,-8.41253"></polygon>
+</g>
+<!-- U5 -->
+<g id="node17" class="node"><title>U5</title>
+</g>
+<!-- U5&#45;&gt;SEI -->
+<g id="edge13" class="edge"><title>U5-&gt;SEI</title>
+<path fill="none" stroke="#7f7f7f" d="M272,-578.949C272,-578.09 272,-566.611 272,-553.127"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="275.5,-553.077 272,-543.077 268.5,-553.078 275.5,-553.077"></polygon>
+</g>
+<!-- U6 -->
+<g id="node18" class="node"><title>U6</title>
+</g>
+<!-- U6&#45;&gt;Edu -->
+<g id="edge14" class="edge"><title>U6-&gt;Edu</title>
+<path fill="none" stroke="#7f7f7f" d="M182,-578.949C182,-578.09 182,-566.611 182,-553.127"></path>
+<polygon fill="#7f7f7f" stroke="#7f7f7f" points="185.5,-553.077 182,-543.077 178.5,-553.078 185.5,-553.077"></polygon>
+</g>
+</g>
+</svg>
+</div>
+<script type="application/json" data-for="htmlwidget-17b11bc6a52a78809f0f">{"x":{"diagram":"digraph {\n\n # Intialization of graph attributes\n graph [rankdir=TB layout=dot bgcolor=transparent]\n \n #### Node statements\n ## Intialization of node attributes\n node [style=filled, color=gray75,  fontcolor=gray50];\n \n ## latent variables and associated variances\n subgraph {\n    rank = same;\n    Alien67 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor=\"#9e911b\", fontcolor=white];\n    Alien71 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor=\"#9E1B34\", fontcolor=white];\n }\n\n subgraph {\n    rank = same;\n    Alien67;\n    Alien67var[shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\" minlen=1];\n    Alien71var[shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\" minlen=1];\n }\n \n subgraph{\n    rank=same;\n    SES [shape=circle, fontsize=10, width=1.25, height=1, fillcolor=\"#1b4d9e\", fontcolor=white]; \n    SESvar[shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\"];\n }\n\n ## observed variables\n node [width=1, height=1, fixedsize=true, shape=square, style=\"\"]\n\n subgraph {\n    rank=same;\n    node [color=\"#9e911b\"]\n    anomie_67[label=\"Anomie\\n1967\"] powerless_67[label=\"Powerless\\n1967\"];\n    node [color=\"#9E1B34\"]\n    anomie_71[label=\"Anomie\\n1971\"] powerless_71[label=\"Powerless\\n1971\"]; \n }\n\n node [color=\"#1b4d9e\"]\n Edu SEI;\n\n\n ## variances\n subgraph {\n    rank=same;\n    node [height=0, shape=none, color=gray80]\n    U1 [label=\"\"]; \n    U2 [label=\"\"]; \n    \n    U3 [label=\"\"]; \n    U4 [label=\"\"]; \n }\n\n subgraph {\n    rank=same;\n    node [height=0, shape=none, color=gray80]\n    U5 [label=\"\"]; \n    U6 [label=\"\"]; \n }\n\n #### Edge statements\n \n ## Initialization of edge attributes\n\n edge [color = gray50, rel = yields dir=forward fontsize=12]\n \n ## latent to latent\n\n edge [label=\"\" fontcolor=gray25 minlen=1] # set min to 1 made it centered\n SES -> Alien67 [color=\"#5bc6cc\"];\n SES -> Alien71 [color=\"#8c88b8\"];\n\n edge [label=\"\" fontcolor=gray25 dir=forward]\n Alien67 -> Alien71 [color=\"#c9be85\" minlen=6];\n\n ## latent to observed\n\n edge [label=\"\" fontcolor=gray25 ]\n {Edu SEI} -> SES [dir=back color=\"#1b4d9e\" minlen=2];\n\n edge [label=\"\" fontcolor=gray25 minlen=2 dir=forward]\n Alien67 -> {anomie_67 powerless_67} [color=\"#9e911b\"]; \n\n edge [label=\"\" fontcolor=gray25 minlen=2]\n Alien71 -> {anomie_71 powerless_71} [color=\"#9E1B34\"]; \n\n ## variances\n\n SESvar -> SES[angle=45];\n Alien67var -> Alien67[angle=45];\n Alien71 -> Alien71var[angle=45 dir=back];\n \n U5 -> SEI [label=\"\" minlen=.5];\n U6 -> Edu [label=\"\" minlen=.5];\n \n \n edge [dir=back fontsize=8 fontcolor=gray25 minlen=.5] \n anomie_67  -> U1 [label=\"\"];\n powerless_67 -> U2 [label=\"\"];\n \n anomie_71 -> U3 [label=\"\"];\n powerless_71 -> U4 [label=\"\"];\n \n U1 -> U3[dir=both color=gray80];\n U2 -> U4[dir=both color=gray80];\n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<p><br></p>
+<p>The standardized results of the structural model are visualized below, and statistical results below that. In this case, the structural paths are statistically significant, as is the indirect effect specifically. Note that the disturbances for the endogenous latent variables reflect only unobserved causes, not measurement error, which is captured via the uniquenesses for the indicators. In other words, the path coefficients from one latent variable to another have been adjusted for measurement error.</p>
+<p>Here we see that higher socioeconomic status is affiliated with less alienation, while there is a notable positive relationship of prior alienation with later alienation. We are also accounting for roughly 50% of the variance in 1971 alienation. Colors represent positive vs.&nbsp;negative weights, and the closer to zero the more faded they are.</p>
+<div style="width:100%; margin:auto auto;">
+<div id="htmlwidget-1b6fa7f79b40806097b2" style="width:100%;height:500px;" class="grViz html-widget html-widget-static-bound"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
+
+<!-- Generated by graphviz version 2.38.0 (20140413.2041)
+ -->
+<!-- Title: %63 Pages: 1 -->
+<svg viewBox="0.00 0.00 584.00 238.40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 100%; height: 100%;">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 234.4)">
+<title>%63</title>
+<!-- Alien67 -->
+<g id="node1" class="node"><title>Alien67</title>
+<ellipse fill="#9e911b" stroke="#bfbfbf" cx="135" cy="-45" rx="45" ry="45"></ellipse>
+<text text-anchor="middle" x="135" y="-42" font-family="Times,serif" font-size="10.00" fill="white">Alien67</text>
+</g>
+<!-- Alien71 -->
+<g id="node2" class="node"><title>Alien71</title>
+<ellipse fill="#9e1b34" stroke="#bfbfbf" cx="441" cy="-45" rx="45" ry="45"></ellipse>
+<text text-anchor="middle" x="441" y="-42" font-family="Times,serif" font-size="10.00" fill="white">Alien71</text>
+</g>
+<!-- Alien67&#45;&gt;Alien71 -->
+<g id="edge3" class="edge"><title>Alien67-&gt;Alien71</title>
+<path fill="none" stroke="#006400" stroke-width="4" stroke-opacity="0.568627" d="M180.151,-45C234.729,-45 326.558,-45 385.431,-45"></path>
+<polygon fill="#006400" fill-opacity="0.568627" stroke="#006400" stroke-width="4" stroke-opacity="0.568627" points="385.663,-48.5001 395.663,-45 385.663,-41.5001 385.663,-48.5001"></polygon>
+<text text-anchor="middle" x="288" y="-51.6" font-family="Times,serif" font-size="12.00" fill="#006400">.57</text>
+</g>
+<!-- Alien71var -->
+<g id="node4" class="node"><title>Alien71var</title>
+<polygon fill="none" stroke="none" points="576,-63 522,-63 522,-27 576,-27 576,-63"></polygon>
+</g>
+<!-- Alien71&#45;&gt;Alien71var -->
+<g id="edge6" class="edge"><title>Alien71-&gt;Alien71var</title>
+<path fill="none" stroke="#cccccc" d="M496.218,-45C505.143,-45 514.022,-45 521.882,-45"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="496.176,-41.5001 486.176,-45 496.176,-48.5001 496.176,-41.5001"></polygon>
+<text text-anchor="middle" x="504" y="-51.6" font-family="Times,serif" font-size="12.00" fill="#404040">.50</text>
+</g>
+<!-- Alien67var -->
+<g id="node3" class="node"><title>Alien67var</title>
+<polygon fill="none" stroke="none" points="54,-63 0,-63 0,-27 54,-27 54,-63"></polygon>
+</g>
+<!-- Alien67var&#45;&gt;Alien67 -->
+<g id="edge5" class="edge"><title>Alien67var-&gt;Alien67</title>
+<path fill="none" stroke="#cccccc" d="M54.253,-45C61.9781,-45 70.6803,-45 79.4373,-45"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="79.6873,-48.5001 89.6872,-45 79.6872,-41.5001 79.6873,-48.5001"></polygon>
+<text text-anchor="middle" x="72" y="-51.6" font-family="Times,serif" font-size="12.00" fill="#404040">.68</text>
+</g>
+<!-- SES -->
+<g id="node5" class="node"><title>SES</title>
+<ellipse fill="#1b4d9e" stroke="#bfbfbf" cx="288" cy="-185.4" rx="45" ry="45"></ellipse>
+<text text-anchor="middle" x="288" y="-182.4" font-family="Times,serif" font-size="10.00" fill="white">SES</text>
+</g>
+<!-- SES&#45;&gt;Alien67 -->
+<g id="edge1" class="edge"><title>SES-&gt;Alien67</title>
+<path fill="none" stroke="#8b0000" stroke-width="4" stroke-opacity="0.560784" d="M254.801,-154.369C231.464,-133.259 200.111,-104.898 175.333,-82.4844"></path>
+<polygon fill="#8b0000" fill-opacity="0.560784" stroke="#8b0000" stroke-width="4" stroke-opacity="0.560784" points="177.635,-79.8469 167.871,-75.7341 172.939,-85.0381 177.635,-79.8469"></polygon>
+<text text-anchor="middle" x="226.497" y="-111.6" font-family="Times,serif" font-size="12.00" fill="#8b0000">-.56</text>
+</g>
+<!-- SES&#45;&gt;Alien71 -->
+<g id="edge2" class="edge"><title>SES-&gt;Alien71</title>
+<path fill="none" stroke="#8b0000" stroke-width="4" stroke-opacity="0.211765" d="M321.199,-154.369C344.536,-133.259 375.889,-104.898 400.667,-82.4844"></path>
+<polygon fill="#8b0000" fill-opacity="0.211765" stroke="#8b0000" stroke-width="4" stroke-opacity="0.211765" points="403.061,-85.0381 408.129,-75.7341 398.365,-79.8469 403.061,-85.0381"></polygon>
+<text text-anchor="middle" x="378.497" y="-111.6" font-family="Times,serif" font-size="12.00" fill="#8b0000">-.21</text>
+</g>
+<!-- SESvar -->
+<g id="node6" class="node"><title>SESvar</title>
+<polygon fill="none" stroke="none" points="207,-203.4 153,-203.4 153,-167.4 207,-167.4 207,-203.4"></polygon>
+</g>
+<!-- SESvar&#45;&gt;SES -->
+<g id="edge4" class="edge"><title>SESvar-&gt;SES</title>
+<path fill="none" stroke="#cccccc" d="M207.253,-185.4C214.978,-185.4 223.68,-185.4 232.437,-185.4"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="232.687,-188.9 242.687,-185.4 232.687,-181.9 232.687,-188.9"></polygon>
+<text text-anchor="middle" x="225" y="-192" font-family="Times,serif" font-size="12.00" fill="#404040">1.0</text>
+</g>
+</g>
+</svg>
+</div>
+<script type="application/json" data-for="htmlwidget-1b6fa7f79b40806097b2">{"x":{"diagram":"digraph {\n\n # Intialization of graph attributes\n graph [rankdir=TB layout=dot bgcolor=transparent]\n \n #### Node statements\n ## Intialization of node attributes\n node [style=filled, color=gray75,  fontcolor=gray50];\n \n ## latent variables and associated variances\n subgraph {\n    rank = same;\n    Alien67 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor=\"#9e911b\", fontcolor=white];\n    Alien71 [shape=circle, fontsize=10, width=1.25, height=1, fillcolor=\"#9E1B34\", fontcolor=white];\n }\n\n subgraph {\n    rank = same;\n    Alien67;\n    Alien67var[shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\"];\n    Alien71var[shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\"];\n }\n \n subgraph{\n    rank=same;\n    SES [shape=circle, fontsize=10, width=1.25, height=1, fillcolor=\"#1b4d9e\", fontcolor=white]; \n    SESvar[shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\"];\n }\n\n\n\n #### Edge statements\n \n ## Initialization of edge attributes\n\n edge [color = gray80, rel = yields dir=forward fontsize=12]\n \n ## latent to latent\n\n edge [label=\"\" fontcolor=gray25 minlen=1 ] # set min to 1 made it centered\n SES -> Alien67 [label=\"-.56\" fontcolor=\"#8B00008F\" color=\"#8B00008F\", alpha=.5,  penwidth=4];   # the alpha attribute is utterly ignored for the edge so use alpha func; still will be ignored for fontcolor\n SES -> Alien71 [label=\"-.21\" fontcolor=\"#8B000036\" color=\"#8B000036\" penwidth=4];\n\n edge [label=\"\" fontcolor=gray25 dir=forward ]\n Alien67 -> Alien71 [label=\".57\" fontcolor=\"#00640091\" color=\"#00640091\" minlen=6 penwidth=4];\n\n\n ## variances\n\n SESvar -> SES[label=\"1.0\"];\n Alien67var -> Alien67[label=\".68\"];\n Alien71 -> Alien71var[label=\".50\" dir=back];\n\n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<pre><code>lavaan (0.5-23.1097) converged normally after  73 iterations
+
+  Number of observations                           932
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                4.735
+  Degrees of freedom                                 4
+  P-value (Chi-square)                           0.316
+
+Model test baseline model:
+
+  Minimum Function Test Statistic             2133.722
+  Degrees of freedom                                15
+  P-value                                        0.000
+
+User model versus baseline model:
+
+  Comparative Fit Index (CFI)                    1.000
+  Tucker-Lewis Index (TLI)                       0.999
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -15213.274
+  Loglikelihood unrestricted model (H1)     -15210.906
+
+  Number of free parameters                         17
+  Akaike (AIC)                               30460.548
+  Bayesian (BIC)                             30542.783
+  Sample-size adjusted Bayesian (BIC)        30488.792
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.014
+  90 Percent Confidence Interval          0.000  0.053
+  P-value RMSEA &lt;= 0.05                          0.930
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.007
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  ses =~                                                                
+    education         1.000                               2.607    0.842
+    sei               5.219    0.422   12.364    0.000   13.609    0.642
+  alien67 =~                                                            
+    anomia67          1.000                               2.663    0.774
+    powerless67       0.979    0.062   15.895    0.000    2.606    0.852
+  alien71 =~                                                            
+    anomia71          1.000                               2.850    0.805
+    powerless71       0.922    0.059   15.498    0.000    2.628    0.832
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  alien71 ~                                                             
+    alien67   (aa)    0.607    0.051   11.898    0.000    0.567    0.567
+    ses              -0.227    0.052   -4.334    0.000   -0.207   -0.207
+  alien67 ~                                                             
+    ses       (sa)   -0.575    0.056  -10.195    0.000   -0.563   -0.563
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+ .anomia67 ~~                                                           
+   .anomia71          1.623    0.314    5.176    0.000    1.623    0.356
+ .powerless67 ~~                                                        
+   .powerless71       0.339    0.261    1.298    0.194    0.339    0.121
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .education         2.801    0.507    5.525    0.000    2.801    0.292
+   .sei             264.597   18.126   14.597    0.000  264.597    0.588
+   .anomia67          4.731    0.453   10.441    0.000    4.731    0.400
+   .powerless67       2.563    0.403    6.359    0.000    2.563    0.274
+   .anomia71          4.399    0.515    8.542    0.000    4.399    0.351
+   .powerless71       3.070    0.434    7.070    0.000    3.070    0.308
+    ses               6.798    0.649   10.475    0.000    1.000    1.000
+   .alien67           4.841    0.467   10.359    0.000    0.683    0.683
+   .alien71           4.083    0.404   10.104    0.000    0.503    0.503
+
+R-Square:
+                   Estimate
+    education         0.708
+    sei               0.412
+    anomia67          0.600
+    powerless67       0.726
+    anomia71          0.649
+    powerless71       0.692
+    alien67           0.317
+    alien71           0.497
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    IndirectEffect   -0.349    0.041   -8.538    0.000   -0.319   -0.319</code></pre>
+<p>To be clear, your interpretations based on standard regression and previous models with only observed variables still hold here, as the edge parameters are still regression coefficients just like they have always been. It will serve you well in the beginning to interpret each endogenous variable individually as its own model, then move toward the big picture. Regression with latent variables is the same as regression with observed variables which is the same as a mixture of them. Correlations, i.e.&nbsp;undirected paths, are still just correlations just like anywhere else. As for the model fit indices, I will discuss them momentarily and in turn.</p>
+</div>
+<div id="issues-in-sem" class="section level2">
+<h2>Issues in SEM</h2>
+<div id="identification" class="section level3">
+<h3>Identification</h3>
+<p>Identification generally refers to the problem of finding a unique estimate of the value for each parameter in the model. Consider the following: <span class="math display"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="mjx-chtml MJXc-display" style="text-align: center;"><span id="MathJax-Element-1-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; text-align: center; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-1" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-2" class="mjx-mrow"><span id="MJXc-Node-3" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.265em;">a</span></span><span id="MJXc-Node-4" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.318em; padding-bottom: 0.423em;">+</span></span><span id="MJXc-Node-5" class="mjx-mi MJXc-space2"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.475em; padding-bottom: 0.265em;">b</span></span><span id="MJXc-Node-6" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.055em; padding-bottom: 0.318em;">=</span></span><span id="MJXc-Node-7" class="mjx-mn MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">2</span></span></span></span><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>a</mi><mo>+</mo><mi>b</mi><mo>=</mo><mn>2</mn></math></span></span></span><script type="math/tex; mode=display" id="MathJax-Element-1"> a + b = 2</script></span></p>
+<p>There is no way for us to determine a unique solution for <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-2-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-8" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-9" class="mjx-mrow"><span id="MJXc-Node-10" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.265em;">a</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi></math></span></span><script type="math/tex" id="MathJax-Element-2">a</script></span> and <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-3-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;b&lt;/mi&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-11" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-12" class="mjx-mrow"><span id="MJXc-Node-13" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.475em; padding-bottom: 0.265em;">b</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>b</mi></math></span></span><script type="math/tex" id="MathJax-Element-3">b</script></span>, e.g.&nbsp;the values of 1 and 1 work just as well as -1052 and 1054 and infinite other combinations. We can talk about 3 basic scenarios, and the problem generally regards how much information we have (in terms of (co)variances) vs.&nbsp;how many parameters we want to estimate in the model.</p>
+<ul>
+<li>A model which has an equal number of observations (again, in terms of (co)variances) and parameters to estimate would have zero degrees of freedom, and is known as a <span class="emph">just identified</span> model. In a just identified model there are no extra degrees of freedom leftover to test model fit.</li>
+<li><span class="emph">Underidentified models</span> are models where it is not possible to find a unique estimate for each parameter. These models may have negative degrees of freedom or problematic model structures, as in the example above, and you’ll generally know right away there is a problem as whatever software package will note an error, warning, or not provide output.</li>
+<li><span class="emph">Overidentified models</span> have positive degrees of freedom, meaning there is more than enough pieces of information to estimate each parameter. It is desirable to have overidentified models as it allows us to use other measures of model fit.</li>
+</ul>
+<p>Consider the following example in which we try to estimate a latent variable model with only two observed variables, as would be the case in the prior Alienation measurement models if they are examined in isolation. We have only two variances and one covariance to estimate two paths, the latent variable variance and the two residual variances. By convention, a path is fixed at 1 to scale the latent variable, but that still leaves us with four parameters to estimate with only three pieces of information, hence the <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-4-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mn&gt;3&lt;/mn&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;4&lt;/mn&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-14" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-15" class="mjx-mrow"><span id="MJXc-Node-16" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.37em;">3</span></span><span id="MJXc-Node-17" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.318em; padding-bottom: 0.423em;">−</span></span><span id="MJXc-Node-18" class="mjx-mn MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">4</span></span><span id="MJXc-Node-19" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.055em; padding-bottom: 0.318em;">=</span></span><span id="MJXc-Node-20" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.318em; padding-bottom: 0.423em;">−</span></span><span id="MJXc-Node-21" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">1</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>3</mn><mo>−</mo><mn>4</mn><mo>=</mo><mo>−</mo><mn>1</mn></math></span></span><script type="math/tex" id="MathJax-Element-4">3 - 4 = -1</script></span> degrees of freedom and lack of standard errors in the output.</p>
+<div style="width:100%; margin:auto auto;">
+<div id="htmlwidget-dbab41436b6e5f24ba4c" style="width:100%;height:500px;" class="grViz html-widget html-widget-static-bound"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
+
+<!-- Generated by graphviz version 2.38.0 (20140413.2041)
+ -->
+<!-- Title: underidentified Pages: 1 -->
+<svg viewBox="0.00 0.00 98.00 333.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 100%; height: 100%;">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 329)">
+<title>underidentified</title>
+<!-- X1 -->
+<g id="node1" class="node"><title>X1</title>
+<polygon fill="none" stroke="#00aaff" points="36,-108 0,-108 0,-72 36,-72 36,-108"></polygon>
+<text text-anchor="middle" x="18" y="-87" font-family="Times,serif" font-size="10.00" fill="#7f7f7f">X1</text>
+</g>
+<!-- X1var -->
+<g id="node3" class="node"><title>X1var</title>
+</g>
+<!-- X1&#45;&gt;X1var -->
+<g id="edge5" class="edge"><title>X1-&gt;X1var</title>
+<path fill="none" stroke="#cccccc" d="M18,-61.6651C18,-53.0537 18,-43.7913 18,-36.1043"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="14.5001,-61.6966 18,-71.6966 21.5001,-61.6967 14.5001,-61.6966"></polygon>
+</g>
+<!-- X2 -->
+<g id="node2" class="node"><title>X2</title>
+<polygon fill="none" stroke="#00aaff" points="90,-108 54,-108 54,-72 90,-72 90,-108"></polygon>
+<text text-anchor="middle" x="72" y="-87" font-family="Times,serif" font-size="10.00" fill="#7f7f7f">X2</text>
+</g>
+<!-- X2var -->
+<g id="node4" class="node"><title>X2var</title>
+</g>
+<!-- X2&#45;&gt;X2var -->
+<g id="edge4" class="edge"><title>X2-&gt;X2var</title>
+<path fill="none" stroke="#cccccc" d="M72,-61.6651C72,-53.0537 72,-43.7913 72,-36.1043"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="68.5001,-61.6966 72,-71.6966 75.5001,-61.6967 68.5001,-61.6966"></polygon>
+</g>
+<!-- LV -->
+<g id="node5" class="node"><title>LV</title>
+<ellipse fill="#00aaff" stroke="#bfbfbf" cx="41" cy="-217" rx="36" ry="36"></ellipse>
+<text text-anchor="middle" x="41" y="-214" font-family="Times,serif" font-size="10.00" fill="white">LV</text>
+</g>
+<!-- LV&#45;&gt;X1 -->
+<g id="edge1" class="edge"><title>LV-&gt;X1</title>
+<path fill="none" stroke="#cccccc" stroke-dasharray="5,2" d="M34.6543,-181.512C30.9691,-161.484 26.3937,-136.618 22.9715,-118.019"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="26.4057,-117.342 21.1538,-108.14 19.5213,-118.608 26.4057,-117.342"></polygon>
+</g>
+<!-- LV&#45;&gt;X2 -->
+<g id="edge2" class="edge"><title>LV-&gt;X2</title>
+<path fill="none" stroke="#cccccc" d="M49.4709,-181.843C54.4393,-161.809 60.6301,-136.846 65.2642,-118.161"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="68.7161,-118.782 67.7262,-108.233 61.9219,-117.097 68.7161,-118.782"></polygon>
+</g>
+<!-- LVvar -->
+<g id="node6" class="node"><title>LVvar</title>
+</g>
+<!-- LVvar&#45;&gt;LV -->
+<g id="edge3" class="edge"><title>LVvar-&gt;LV</title>
+<path fill="none" stroke="#cccccc" d="M41,-288.614C41,-281.263 41,-272.323 41,-263.311"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="44.5001,-263.185 41,-253.185 37.5001,-263.185 44.5001,-263.185"></polygon>
+</g>
+</g>
+</svg>
+</div>
+<script type="application/json" data-for="htmlwidget-dbab41436b6e5f24ba4c">{"x":{"diagram":"digraph underidentified {\n\n # Intialization of graph attributes\n graph [rankdir=TB layout=dot bgcolor=transparent]\n \n #### Node statements\n ## Intialization of node attributes\n node [color=gray75 fontcolor=gray50];\n \n ## latent variables and associated variances\n subgraph {\n    rank = same;\n    node [color=\"#00aaff\" shape=square, fontsize=10, width=.5, height=.5, fontcolor=gray50];\n    X1;\n    X2;\n }\n\n subgraph {\n    rank = same;\n    node [width=.5 height=.5 shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\"];\n    X1var;\n    X2var;\n }\n \n    LV [style=\"filled\" shape=circle fontsize=10 width=1 height=1 fillcolor=\"#00aaff\" fontcolor=white]; \n    LVvar[shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\"];\n\n\n #### Edge statements\n \n ## Initialization of edge attributes\n\n edge [color = gray80, rel = yields dir=forward fontsize=12]\n \n ## latent to observed\n\n edge [label=\"\" fontcolor=gray25 minlen=1] # set min to 1 made it centered\n LV -> X1 [minlen=2 style=dashed];\n LV -> X2 [minlen=2];\n\n ## variances\n\n LVvar -> LV[];\n X2 -> X2var[dir=back];\n X1 -> X1var[dir=back];\n\n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelUnder =<span class="st"> 'LV =~ x1 + x2'</span>
+modelJust  =<span class="st"> 'LV =~ x1 + x2 + x3'</span>
+underModel =<span class="st"> </span><span class="kw">cfa</span>(modelUnder, <span class="dt">data=</span><span class="kw">cbind</span>(x1,x2,x3))
+<span class="kw">summary</span>(underModel)</code></pre></div>
+<pre><code>lavaan (0.5-23.1097) converged normally after  10 iterations
+
+  Number of observations                           100
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                   NA
+  Degrees of freedom                                -1
+  Minimum Function Value               0.0000000000000
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  LV =~                                               
+    x1                1.000                           
+    x2                0.679       NA                  
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .x1                0.404       NA                  
+   .x2                0.740       NA                  
+    LV                0.614       NA                  </code></pre>
+<p>If we had a third manifest variable, we now have <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-5-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;N&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;N&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;/&lt;/mo&gt;&lt;/mrow&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;3&lt;/mn&gt;&lt;mo&gt;&amp;#x2217;&lt;/mo&gt;&lt;mn&gt;4&lt;/mn&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;/&lt;/mo&gt;&lt;/mrow&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;6&lt;/mn&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-22" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-23" class="mjx-mrow"><span id="MJXc-Node-24" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.475em; padding-bottom: 0.265em; padding-right: 0.085em;">N</span></span><span id="MJXc-Node-25" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.475em; padding-bottom: 0.58em;">(</span></span><span id="MJXc-Node-26" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.475em; padding-bottom: 0.265em; padding-right: 0.085em;">N</span></span><span id="MJXc-Node-27" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.318em; padding-bottom: 0.423em;">+</span></span><span id="MJXc-Node-28" class="mjx-mn MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">1</span></span><span id="MJXc-Node-29" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.475em; padding-bottom: 0.58em;">)</span></span><span id="MJXc-Node-30" class="mjx-texatom"><span id="MJXc-Node-31" class="mjx-mrow"><span id="MJXc-Node-32" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.475em; padding-bottom: 0.58em;">/</span></span></span></span><span id="MJXc-Node-33" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">2</span></span><span id="MJXc-Node-34" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.055em; padding-bottom: 0.318em;">=</span></span><span id="MJXc-Node-35" class="mjx-mn MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.37em;">3</span></span><span id="MJXc-Node-36" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.16em; padding-bottom: 0.318em;">∗</span></span><span id="MJXc-Node-37" class="mjx-mn MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">4</span></span><span id="MJXc-Node-38" class="mjx-texatom"><span id="MJXc-Node-39" class="mjx-mrow"><span id="MJXc-Node-40" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.475em; padding-bottom: 0.58em;">/</span></span></span></span><span id="MJXc-Node-41" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">2</span></span><span id="MJXc-Node-42" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.055em; padding-bottom: 0.318em;">=</span></span><span id="MJXc-Node-43" class="mjx-mn MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.37em;">6</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi><mo stretchy="false">(</mo><mi>N</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mrow class="MJX-TeXAtom-ORD"><mo>/</mo></mrow><mn>2</mn><mo>=</mo><mn>3</mn><mo>∗</mo><mn>4</mn><mrow class="MJX-TeXAtom-ORD"><mo>/</mo></mrow><mn>2</mn><mo>=</mo><mn>6</mn></math></span></span><script type="math/tex" id="MathJax-Element-5">N(N+1)/2 = 3*4/2 = 6</script></span> pieces of information, i.e.&nbsp;3 variances and 3 covariances, to estimate the model, and still seven unknowns. Again though, we usually fix the first loading to 1 rather than estimate it, and so the model would be identified. An alternative approach would be to fix the factor variance to some value (typically 1 to create a standardized latent variable). This will allow us to estimate a unique value for each path.</p>
+<p>Even so, this is the <em>just-identified</em> situation, and so the model runs fine, but we won’t have any fit measures because we can perfectly reproduce the observed correlation matrix.</p>
+<div style="width:100%; margin:auto auto;">
+<div id="htmlwidget-b14ba34db22305655699" style="width:100%;height:500px;" class="grViz html-widget html-widget-static-bound"><!--?xml version="1.0" encoding="UTF-8" standalone="no"?-->
+
+<!-- Generated by graphviz version 2.38.0 (20140413.2041)
+ -->
+<!-- Title: %97 Pages: 1 -->
+<svg viewBox="0.00 0.00 152.00 333.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 100%; height: 100%;">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 329)">
+<title>%97</title>
+<!-- X1 -->
+<g id="node1" class="node"><title>X1</title>
+<polygon fill="none" stroke="#00aaff" points="36,-108 0,-108 0,-72 36,-72 36,-108"></polygon>
+<text text-anchor="middle" x="18" y="-87" font-family="Times,serif" font-size="10.00" fill="#7f7f7f">X1</text>
+</g>
+<!-- X1var -->
+<g id="node4" class="node"><title>X1var</title>
+</g>
+<!-- X1&#45;&gt;X1var -->
+<g id="edge5" class="edge"><title>X1-&gt;X1var</title>
+<path fill="none" stroke="#cccccc" d="M18,-61.6651C18,-53.0537 18,-43.7913 18,-36.1043"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="14.5001,-61.6966 18,-71.6966 21.5001,-61.6967 14.5001,-61.6966"></polygon>
+</g>
+<!-- X2 -->
+<g id="node2" class="node"><title>X2</title>
+<polygon fill="none" stroke="#00aaff" points="90,-108 54,-108 54,-72 90,-72 90,-108"></polygon>
+<text text-anchor="middle" x="72" y="-87" font-family="Times,serif" font-size="10.00" fill="#7f7f7f">X2</text>
+</g>
+<!-- X2var -->
+<g id="node5" class="node"><title>X2var</title>
+</g>
+<!-- X2&#45;&gt;X2var -->
+<g id="edge6" class="edge"><title>X2-&gt;X2var</title>
+<path fill="none" stroke="#cccccc" d="M72,-61.6651C72,-53.0537 72,-43.7913 72,-36.1043"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="68.5001,-61.6966 72,-71.6966 75.5001,-61.6967 68.5001,-61.6966"></polygon>
+</g>
+<!-- X3 -->
+<g id="node3" class="node"><title>X3</title>
+<polygon fill="none" stroke="#00aaff" points="144,-108 108,-108 108,-72 144,-72 144,-108"></polygon>
+<text text-anchor="middle" x="126" y="-87" font-family="Times,serif" font-size="10.00" fill="#7f7f7f">X3</text>
+</g>
+<!-- X3var -->
+<g id="node6" class="node"><title>X3var</title>
+</g>
+<!-- X3&#45;&gt;X3var -->
+<g id="edge7" class="edge"><title>X3-&gt;X3var</title>
+<path fill="none" stroke="#cccccc" d="M126,-61.6651C126,-53.0537 126,-43.7913 126,-36.1043"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="122.5,-61.6966 126,-71.6966 129.5,-61.6967 122.5,-61.6966"></polygon>
+</g>
+<!-- LV -->
+<g id="node7" class="node"><title>LV</title>
+<ellipse fill="#00aaff" stroke="#bfbfbf" cx="72" cy="-217" rx="36" ry="36"></ellipse>
+<text text-anchor="middle" x="72" y="-214" font-family="Times,serif" font-size="10.00" fill="white">LV</text>
+</g>
+<!-- LV&#45;&gt;X1 -->
+<g id="edge1" class="edge"><title>LV-&gt;X1</title>
+<path fill="none" stroke="#cccccc" stroke-dasharray="5,2" d="M57.9531,-183.484C49.0649,-162.91 37.7225,-136.654 29.3953,-117.378"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="32.5234,-115.793 25.3446,-108.001 26.0974,-118.569 32.5234,-115.793"></polygon>
+</g>
+<!-- LV&#45;&gt;X2 -->
+<g id="edge2" class="edge"><title>LV-&gt;X2</title>
+<path fill="none" stroke="#cccccc" d="M72,-180.848C72,-161.049 72,-136.688 72,-118.33"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="75.5001,-118.295 72,-108.295 68.5001,-118.295 75.5001,-118.295"></polygon>
+</g>
+<!-- LV&#45;&gt;X3 -->
+<g id="edge3" class="edge"><title>LV-&gt;X3</title>
+<path fill="none" stroke="#cccccc" d="M86.0469,-183.484C94.9351,-162.91 106.278,-136.654 114.605,-117.378"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="117.903,-118.569 118.655,-108.001 111.477,-115.793 117.903,-118.569"></polygon>
+</g>
+<!-- LVvar -->
+<g id="node8" class="node"><title>LVvar</title>
+</g>
+<!-- LVvar&#45;&gt;LV -->
+<g id="edge4" class="edge"><title>LVvar-&gt;LV</title>
+<path fill="none" stroke="#cccccc" d="M72,-288.614C72,-281.263 72,-272.323 72,-263.311"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="75.5001,-263.185 72,-253.185 68.5001,-263.185 75.5001,-263.185"></polygon>
+</g>
+</g>
+</svg>
+</div>
+<script type="application/json" data-for="htmlwidget-b14ba34db22305655699">{"x":{"diagram":"digraph {\n\n # Intialization of graph attributes\n graph [rankdir=TB layout=dot bgcolor=transparent]\n \n #### Node statements\n ## Intialization of node attributes\n node [color=gray75 fontcolor=gray50];\n \n ## latent variables and associated variances\n subgraph {\n    rank = same;\n    node [color=\"#00aaff\" shape=square, fontsize=10, width=.5, height=.5, fontcolor=gray50];\n    X1;\n    X2;\n    X3;\n }\n\n subgraph {\n    rank = same;\n    node [width=.5 height=.5 shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\"];\n    X1var;\n    X2var;\n    X3var;\n }\n \n    LV [style=\"filled\" shape=circle fontsize=10 width=1 height=1 fillcolor=\"#00aaff\" fontcolor=white]; \n    LVvar[shape=\"none\" color=\"none\" fillcolor=\"none\" label=\"\"];\n\n\n #### Edge statements\n \n ## Initialization of edge attributes\n\n edge [color = gray80, rel = yields dir=forward fontsize=12]\n \n ## latent to observed\n\n edge [label=\"\" fontcolor=gray25 minlen=1] # set min to 1 made it centered\n LV -> X1 [minlen=2 style=dashed];\n LV -> X2 [minlen=2];\n LV -> X3 [minlen=2];\n\n ## variances\n\n LVvar -> LV[];\n X1 -> X1var[dir=back];\n X2 -> X2var[dir=back];\n X3 -> X3var[dir=back];\n\n }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">justModel =<span class="st"> </span><span class="kw">cfa</span>(modelJust, <span class="dt">data=</span><span class="kw">cbind</span>(x1,x2,x3))
+<span class="kw">summary</span>(justModel, <span class="dt">fit=</span>T)</code></pre></div>
+<pre><code>lavaan (0.5-23.1097) converged normally after  21 iterations
+
+  Number of observations                           100
+
+  Estimator                                         ML
+  Minimum Function Test Statistic                0.000
+  Degrees of freedom                                 0
+  Minimum Function Value               0.0000000000000
+
+Model test baseline model:
+
+  Minimum Function Test Statistic               90.969
+  Degrees of freedom                                 3
+  P-value                                        0.000
+
+User model versus baseline model:
+
+  Comparative Fit Index (CFI)                    1.000
+  Tucker-Lewis Index (TLI)                       1.000
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)               -389.071
+  Loglikelihood unrestricted model (H1)       -389.071
+
+  Number of free parameters                          6
+  Akaike (AIC)                                 790.143
+  Bayesian (BIC)                               805.774
+  Sample-size adjusted Bayesian (BIC)          786.824
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.000
+  90 Percent Confidence Interval          0.000  0.000
+  P-value RMSEA &lt;= 0.05                             NA
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.000
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Standard Errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  LV =~                                               
+    x1                1.000                           
+    x2                1.417    0.281    5.033    0.000
+    x3                1.773    0.383    4.629    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .x1                0.724    0.113    6.424    0.000
+   .x2                0.432    0.113    3.840    0.000
+   .x3                0.220    0.151    1.457    0.145
+    LV                0.294    0.112    2.636    0.008</code></pre>
+<p>Note that in the alienation model above, we have 6*7/2 = 21 variances and covariances, which provides enough information to estimate the 17 parameters of the model. Thus had we run a two indicator measurement model on just one of those factors, it would not be identified without fixing some parameters. Allowing correlations among latent variables allows more information from the covariance matrix to be brought to bear.</p>
+<p>The important point to remember is that identification is based on the covariance matrix (and number of means for some models). You can have an N of 10,000, but still may not have enough information to estimate the model. Note that determining identification is difficult for any complex model. Necessary conditions include there being model degrees of freedom <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-6-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mo&gt;&amp;#x2265;&lt;/mo&gt;&lt;mn&gt;0&lt;/mn&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-44" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-45" class="mjx-mrow"><span id="MJXc-Node-46" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.475em;">≥</span></span><span id="MJXc-Node-47" class="mjx-mn MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.37em;">0</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>≥</mo><mn>0</mn></math></span></span><script type="math/tex" id="MathJax-Element-6">\geq 0</script></span>, and scaling of all latent variables, but they are not sufficient. In general though, it is enough to know conceptually what the issue is and how the information you have relates to what you can estimate.</p>
+</div>
+<div id="fit" class="section level3">
+<h3>Fit</h3>
+<p>There are many, many measures of model fit for SEM, and none of them will give you a definitive answer as to how your model is doing. Your assessment, if you use them, should be based on a holistic approach to get a global sense of how your model is doing. Let’s look again at the alienation results.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fitMeasures</span>(alienation, <span class="kw">c</span>(<span class="st">'chisq'</span>, <span class="st">'df'</span>, <span class="st">'pvalue'</span>, <span class="st">'cfi'</span>, <span class="st">'rmsea'</span>, <span class="st">'srmr'</span>, <span class="st">'AIC'</span>))</code></pre></div>
+<pre><code>    chisq        df    pvalue       cfi     rmsea      srmr       aic 
+    4.735     4.000     0.316     1.000     0.014     0.007 30460.548 </code></pre>
+<div id="chi-square-test" class="section level4">
+<h4>Chi-square test</h4>
+<pre><code>  Estimator                                         ML
+  Minimum Function Test Statistic                4.735
+  Degrees of freedom                                 4
+  P-value (Chi-square)                           0.316</code></pre>
+<p>Conceptually, the <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-7-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mi&gt;&amp;#x03C7;&lt;/mi&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-48" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-49" class="mjx-mrow"><span id="MJXc-Node-50" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-51" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.475em;">χ</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.513em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-52" class="mjx-mn" style=""><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">2</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>χ</mi><mn>2</mn></msup></math></span></span><script type="math/tex" id="MathJax-Element-7">\chi^2</script></span> test measures the discrepancy between the observed correlations and those implied by the model. In the <a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#path-analysis">graphical model section</a>, we actually gave an example of reproducing a correlation from a path analysis. In general, the model goal is to reproduce them as closely as we can. This test compares the fitted model with a (saturated) model that does not have any degrees of freedom. The degrees of freedom for this test are equal to the data (variances + covariances) minus the number of parameters estimated, and that is why when you have df=0 in a just-identified situation, you get no fit statistics. A non-significant <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-8-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mi&gt;&amp;#x03C7;&lt;/mi&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-53" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-54" class="mjx-mrow"><span id="MJXc-Node-55" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-56" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.475em;">χ</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.513em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-57" class="mjx-mn" style=""><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">2</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>χ</mi><mn>2</mn></msup></math></span></span><script type="math/tex" id="MathJax-Element-8">\chi^2</script></span> suggests our model-implied correlations are not statistically different from those we observe, so yay!</p>
+<p><strong>Or not</strong>. Those familiar with null-hypothesis testing know that one cannot accept a null hypothesis, and attempting to do so is fundamentally illogical. Other things that affect this measure specifically include multivariate non-normality, the size of the correlations (larger ones are typically related to larger predicted vs.&nbsp;observed discrepancies), unreliable measures (can actually make this test fail to reject), and sample size (same as with any other model scenario and statistical significance).</p>
+<p>So if it worries you that a core measure of model fit in SEM is fundamentally problematic, good. As has been said before, no single measure will be good enough on its own, so gather as much info as you can. Some suggest to pay more attention to the <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-9-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mi&gt;&amp;#x03C7;&lt;/mi&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-58" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-59" class="mjx-mrow"><span id="MJXc-Node-60" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-61" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.475em;">χ</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.513em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-62" class="mjx-mn" style=""><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">2</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>χ</mi><mn>2</mn></msup></math></span></span><script type="math/tex" id="MathJax-Element-9">\chi^2</script></span> result, but to me, even if useful in some sense, the flawed logic is something that can’t really be overcome. If you use it with appropriate null hypothesis testing logic, a significant <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-10-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mi&gt;&amp;#x03C7;&lt;/mi&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-63" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-64" class="mjx-mrow"><span id="MJXc-Node-65" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-66" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.475em;">χ</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.513em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-67" class="mjx-mn" style=""><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">2</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>χ</mi><mn>2</mn></msup></math></span></span><script type="math/tex" id="MathJax-Element-10">\chi^2</script></span> test can tell you that something is potentially wrong with the model.</p>
+<p>Note that <span class="pack">lavaan</span> also provides a Chi-square test which compares the current model to a model in which all paths are zero, and is essentially akin to the likelihood ratio test we might use in standard model settings (e.g.&nbsp;comparing against an intercept only model). For that test, we want a statistically significant result. However, one can specify a prior model conducted with <span class="pack">lavaan</span> to test against specifically (i.e.&nbsp;to compare nested models), but there is a <a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#model-comparison-example">specific function</a> for that also, and it would provide more as well.</p>
+</div>
+<div id="cfi-etc." class="section level4">
+<h4>CFI etc.</h4>
+<pre><code>User model versus baseline model:
+
+  Comparative Fit Index (CFI)                    1.000
+  Tucker-Lewis Index (TLI)                       0.999</code></pre>
+<p>The <span class="emph">Comparative Fit Index</span> compares the fitted model to a null model that assumes there is no relationship among the measured items. It ranges from 0 to 1, or rather it is rounded to fall between 0 and 1, and CFI values larger than .9 or especially .95 are typically desired, but like other completely arbitrary cutoffs those values guarantee nothing. Others include the <span class="emph">Tucker-Lewis Fit Index</span>, which is provided in standard <span class="pack">lavaan</span> output, but there are more <span class="emph">incremental fit indices</span> where those come from. Both of these are sensitive to the average correlations, to the point that adding meaningful covariates could actually worsen fit if they aren’t notably correlated with other variables in the model. You only need to report one, as they are generally notably correlated.</p>
+</div>
+<div id="rmsea" class="section level4">
+<h4>RMSEA</h4>
+<pre><code>Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.014
+  90 Percent Confidence Interval          0.000  0.053
+  P-value RMSEA &lt;= 0.05                          0.930</code></pre>
+<p>The root mean squared error of approximation is a measure that also centers on the model-implied vs.&nbsp;sample covariance matrix, and, all else being equal, is lower for simpler models and larger sample sizes. Maybe look for values less than .05, but again, don’t be rigid with this. <span class="pack">Lavaan</span> also provides a one-sided test that the RMSEA is <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-11-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mo&gt;&amp;#x2264;&lt;/mo&gt;&lt;mn&gt;.05&lt;/mn&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-68" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-69" class="mjx-mrow"><span id="MJXc-Node-70" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.475em;">≤</span></span><span id="MJXc-Node-71" class="mjx-mn MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.37em;">.05</span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>≤</mo><mn>.05</mn></math></span></span><script type="math/tex" id="MathJax-Element-11">\leq .05</script></span>, or ‘test of close fit’, which ideally would be high. The confidence interval is enough for reporting purposes.</p>
+</div>
+<div id="srmr" class="section level4">
+<h4>SRMR</h4>
+<pre><code>Standardized Root Mean Square Residual:
+
+  SRMR                                           0.007</code></pre>
+<p>The standardized root mean squared residual is the mean absolute correlation residual, i.e.&nbsp;the difference between the observed and model-implied correlations. Historical suggestions are to also look for values less than .05, but it is better to simply inspect the residuals and note where there are large discrepancies.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">residuals</span>(alienation, <span class="dt">type=</span><span class="st">'cor'</span>)$cor</code></pre></div>
+<pre><code>            eductn sei    anom67 pwrl67 anom71 pwrl71
+education    0.000                                   
+sei          0.000  0.000                            
+anomia67     0.007 -0.020  0.000                     
+powerless67 -0.006  0.018  0.000  0.000              
+anomia71     0.007 -0.017  0.000  0.001  0.000       
+powerless71 -0.001  0.001 -0.001  0.000  0.000  0.000</code></pre>
+<p>Like many matrices, it doesn’t take much to where it can be difficult to discern patterns unless one takes a visual approach. Perhaps consider <span class="pack">d3heatmap</span> (examples throughout this document) or <span class="pack">corrplot</span> packages.</p>
+</div>
+<div id="fit-summarized" class="section level4">
+<h4>Fit Summarized</h4>
+<p>A brief summary of these and other old/typical measures of fit are described <a href="https://en.wikipedia.org/wiki/Confirmatory_factor_analysis#Evaluating_model_fit">here</a><a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fn43" class="footnoteRef" id="fnref43"><sup>43</sup></a>. However they all have issues, and one should <em>never</em> use cutoffs as a basis for your ultimate thinking about model performance. Studies have been done and all the fit indices can potentially have problems in various scenarios, and the cutoffs commonly used by applied researchers do not hold up under scrutiny. While they can provide some assistance in the process, they are not meant to replace a global assessment of theory-result compatibility.</p>
+</div>
+</div>
+<div id="model-comparison" class="section level3">
+<h3>Model Comparison</h3>
+<p>All of the above, while rooted in model comparison approaches, are by themselves only providing information about the fit or lack thereof regarding <em>the current model only</em>. In any modeling situation, SEM or otherwise, a model comparison approach is to be preferred. Even when we don’t have the greatest model, being able to choose among viable, or at least competing, options can help science progress.</p>
+<div id="aic" class="section level4">
+<h4>AIC</h4>
+<p>AIC is a good way to compare models in SEM just as it is elsewhere, where a penalty is imposed on the likelihood based on the number of parameters estimated, i.e.&nbsp;model complexity. The value by itself is not useful, but the ‘better’ model will have a lower value. A natural question arises as to how low is low enough to prefer one model over another, but this is impossible to answer because the value of AIC varies greatly with the data and model in question. However, this frees you to consider the relative merits of the models being considered, while knowing one has been deemed ‘better’, at least in terms of AIC. However, if the lower AIC is associated with the simpler model, you’d be hard-pressed to justify not taking it. Some suggest calculating <span class="math inline"><span class="MathJax_Preview" style="color: inherit; display: none;"></span><span id="MathJax-Element-12-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 119%; position: relative;" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msup&gt;&lt;mi&gt;e&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mfrac&gt;&lt;mrow&gt;&lt;msub&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;A&lt;/mi&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;I&lt;/mi&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;C&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;m&lt;/mi&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;msub&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;A&lt;/mi&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;I&lt;/mi&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;C&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;o&lt;/mi&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mi&gt;h&lt;/mi&gt;&lt;mi&gt;e&lt;/mi&gt;&lt;mi&gt;r&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/mrow&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mfrac&gt;&lt;/mrow&gt;&lt;/msup&gt;&lt;/math&gt;" role="presentation"><span id="MJXc-Node-72" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-73" class="mjx-mrow"><span id="MJXc-Node-74" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-75" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.265em;">e</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.596em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-76" class="mjx-texatom" style=""><span id="MJXc-Node-77" class="mjx-mrow"><span id="MJXc-Node-78" class="mjx-mfrac"><span class="mjx-box MJXc-stacked" style="width: 6.297em; padding: 0px 0.12em;"><span class="mjx-numerator" style="font-size: 70.7%; width: 8.906em; top: -1.755em;"><span id="MJXc-Node-79" class="mjx-mrow" style=""><span id="MJXc-Node-80" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-81" class="mjx-texatom"><span id="MJXc-Node-82" class="mjx-mrow"><span id="MJXc-Node-83" class="mjx-mi"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.423em; padding-bottom: 0.318em;">A</span></span><span id="MJXc-Node-84" class="mjx-mi"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.423em; padding-bottom: 0.318em;">I</span></span><span id="MJXc-Node-85" class="mjx-mi"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.423em; padding-bottom: 0.37em;">C</span></span></span></span></span><span class="mjx-sub" style="vertical-align: -0.332em; padding-right: 0.05em;"><span id="MJXc-Node-86" class="mjx-texatom"><span id="MJXc-Node-87" class="mjx-mrow"><span id="MJXc-Node-88" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.265em;">m</span></span><span id="MJXc-Node-89" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.423em; padding-bottom: 0.265em;">i</span></span><span id="MJXc-Node-90" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.265em;">n</span></span></span></span></span></span><span id="MJXc-Node-91" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.318em; padding-bottom: 0.423em;">−</span></span><span id="MJXc-Node-92" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-93" class="mjx-texatom"><span id="MJXc-Node-94" class="mjx-mrow"><span id="MJXc-Node-95" class="mjx-mi"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.423em; padding-bottom: 0.318em;">A</span></span><span id="MJXc-Node-96" class="mjx-mi"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.423em; padding-bottom: 0.318em;">I</span></span><span id="MJXc-Node-97" class="mjx-mi"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.423em; padding-bottom: 0.37em;">C</span></span></span></span></span><span class="mjx-sub" style="vertical-align: -0.365em; padding-right: 0.05em;"><span id="MJXc-Node-98" class="mjx-texatom"><span id="MJXc-Node-99" class="mjx-mrow"><span id="MJXc-Node-100" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.265em;">o</span></span><span id="MJXc-Node-101" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.423em; padding-bottom: 0.265em;">t</span></span><span id="MJXc-Node-102" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.475em; padding-bottom: 0.265em;">h</span></span><span id="MJXc-Node-103" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.265em;">e</span></span><span id="MJXc-Node-104" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.213em; padding-bottom: 0.265em;">r</span></span></span></span></span></span></span></span><span class="mjx-denominator" style="font-size: 70.7%; width: 8.906em; bottom: -0.622em;"><span id="MJXc-Node-105" class="mjx-mn" style=""><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.37em; padding-bottom: 0.318em;">2</span></span></span><span class="mjx-line" style="border-bottom: 1.1px solid; top: -0.292em; width: 6.297em;"></span></span><span class="mjx-vsize" style="height: 1.681em; vertical-align: -0.44em;"></span></span></span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>e</mi><mrow class="MJX-TeXAtom-ORD"><mfrac><mrow><msub><mrow class="MJX-TeXAtom-ORD"><mi mathvariant="normal">A</mi><mi mathvariant="normal">I</mi><mi mathvariant="normal">C</mi></mrow><mrow class="MJX-TeXAtom-ORD"><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub><mo>−</mo><msub><mrow class="MJX-TeXAtom-ORD"><mi mathvariant="normal">A</mi><mi mathvariant="normal">I</mi><mi mathvariant="normal">C</mi></mrow><mrow class="MJX-TeXAtom-ORD"><mi>o</mi><mi>t</mi><mi>h</mi><mi>e</mi><mi>r</mi></mrow></msub></mrow><mn>2</mn></mfrac></mrow></msup></math></span></span><script type="math/tex" id="MathJax-Element-12">e^{\frac{\mathrm{AIC}_{min}-\mathrm{AIC}_{other}}{2}}</script></span> to obtain the <em>relative</em> probability of a model vs the minimum AIC model. But that just puts leaves you with a different arbitrary cutoff to consider.</p>
+<p>A couple other things. Even if not nested, models must have the same variables for them to be compared, which may require you to constrain certain paths to be zero. Also, AIC can be used to compare just-identified models to over-identified ones.</p>
+</div>
+<div id="bic" class="section level4">
+<h4>BIC</h4>
+<p>While BIC is very popularly used in SEM, it has known issues relative to AIC if predictive capability is concerned. Most SEM programs will give you AIC as well. As such, one can probably ignore the BIC, but they will likely agree. Note that while BIC has a Bayesian interpretation, using it doesn’t actually put you in a Bayesian context, and if you were using a Bayesian approach, other measures would be used. If you aren’t using a Bayesian approach, then AIC would likely be preferable in most circumstances. The BIC has a different penalty than AIC, and is not a measure based on predictive performance, which is what we typically want in model selection.</p>
+</div>
+<div id="model-comparison-example" class="section level4">
+<h4>Model Comparison Example</h4>
+<p>Let’s compare the previous model to one without the indirect effect and in which the SES and Alienation contributions are independent (i.e.&nbsp;just make the previous code change to <code>alien67 ~ 0*ses</code>). We’ll use the <span class="pack">semTools</span> package for easy side by side comparison via the <span class="func">compareFit</span> function<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fn44" class="footnoteRef" id="fnref44"><sup>44</sup></a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(semTools)
+## compareFit(alienation, alienationNoInd)</code></pre></div>
+<pre><code>################### Nested Model Comparison #########################
+                                chi df      p delta.cfi
+alienation - alienationNoInd 200.28  1  &lt;.001    0.0941</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DT::<span class="kw">datatable</span>(compfit, <span class="dt">options=</span><span class="kw">list</span>(<span class="dt">dom=</span><span class="st">'t'</span>, <span class="dt">scrollX=</span><span class="ot">TRUE</span>))</code></pre></div>
+<div id="htmlwidget-2f60790ae6b05bd56fcb" style="width:100%;height:auto;" class="datatables html-widget html-widget-static-bound"><div id="DataTables_Table_0_wrapper" class="dataTables_wrapper no-footer"><div class="dataTables_scroll"><div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;"><div class="dataTables_scrollHeadInner" style="box-sizing: content-box; padding-right: 0px;"><table class="display dataTable no-footer" role="grid" style="width: 870px;"><thead>
+    <tr role="row"><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 146px;" aria-label=" "> </th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 88px;" aria-label="chisq: activate to sort column ascending">chisq</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 42px;" aria-label="df: activate to sort column ascending">df</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 76px;" aria-label="pvalue: activate to sort column ascending">pvalue</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 69px;" aria-label="cfi: activate to sort column ascending">cfi</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 69px;" aria-label="tli: activate to sort column ascending">tli</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 117px;" aria-label="aic: activate to sort column ascending">aic</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 117px;" aria-label="bic: activate to sort column ascending">bic</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 75px;" aria-label="rmsea: activate to sort column ascending">rmsea</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 71px;" aria-label="srmr: activate to sort column ascending">srmr</th></tr>
+  </thead></table></div></div><div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;"><table class="display dataTable no-footer" id="DataTables_Table_0" role="grid"><thead>
+    <tr role="row" style="height: 1px;"><th class="sorting_disabled" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 146px;" aria-label=" "><div class="dataTables_sizing" style="height:0;overflow:hidden;"> </div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 88px;" aria-label="chisq: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">chisq</div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 42px;" aria-label="df: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">df</div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 76px;" aria-label="pvalue: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">pvalue</div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 69px;" aria-label="cfi: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">cfi</div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 69px;" aria-label="tli: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">tli</div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 117px;" aria-label="aic: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">aic</div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 117px;" aria-label="bic: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">bic</div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 75px;" aria-label="rmsea: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">rmsea</div></th><th class="sorting" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 71px;" aria-label="srmr: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">srmr</div></th></tr>
+  </thead>
+  
+<tbody><tr role="row" class="odd"><td>alienation</td><td>4.735</td><td>4</td><td>.316†</td><td>.000†</td><td>.999†</td><td>30460.548†</td><td>30542.783†</td><td>.014†</td><td>.007†</td></tr><tr role="row" class="even"><td>alienationNoInd</td><td>205.017</td><td>5</td><td>.000 </td><td>.906 </td><td>.717 </td><td>30658.830 </td><td>30736.227 </td><td>.207 </td><td>.173 </td></tr></tbody></table></div></div></div></div>
+<script type="application/json" data-for="htmlwidget-2f60790ae6b05bd56fcb">{"x":{"filter":"none","data":[["alienation","alienationNoInd"],["4.735","205.017"],["4","5"],[".316†",".000 "],[".000†",".906 "],[".999†",".717 "],["30460.548†","30658.830 "],["30542.783†","30736.227 "],[".014†",".207 "],[".007†",".173 "]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>chisq<\/th>\n      <th>df<\/th>\n      <th>pvalue<\/th>\n      <th>cfi<\/th>\n      <th>tli<\/th>\n      <th>aic<\/th>\n      <th>bic<\/th>\n      <th>rmsea<\/th>\n      <th>srmr<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<p>The first result is a likelihood ratio test. The model with no indirect path is nested within the model with a path and so this is a viable option. It tells us essentially that adding the indirect path results in a statistically significantly better model. AIC measures would suggest the indirect path would result in a better model as well. In terms of internal fit indices, the model including the indirect effect appears to fit the data well (note that the .000 is actually 1.00), while the other model does not. So now we can say that not only does our model appear to fit the data well, but is better than a plausible competitor.</p>
+</div>
+</div>
+<div id="prediction" class="section level3">
+<h3>Prediction</h3>
+<p>While the fitted correlation matrix is nice to be able to obtain, it has always struck me a bit odd that one can’t even predict the actual data with typical SEM software. Part of this is due to the fact that the models regard the covariance matrix as opposed to the raw data, and that is the focus in many SEM situations. In addition, most researchers using SEM seem only in explaining correlations. However, in path analysis, measurement models, and SEM where mean structures are of focus (e.g.&nbsp;growth curves), it stands to reason that one would like to get predicted values and/or be able to test a model on new data. Even in more complex models, predictions can be made by fixing parameters at estimated values and supplying new data.</p>
+<p><span class="pack">Lavaan</span> at least does do this for you with some models, and its <span class="func">lavPredict</span> function allows one to get predicted values for both latent and observed variables, for the current or new data. In addition, the <span class="pack">semTools</span> package is a great resource for comparing models generally, comparing models across groups, model simulation and so forth. Under active development is the capacity to create predictions in more complicated models with latent and observed variables. If you have <em>only</em> observed variables, you might consider the <span class="pack">mediation</span> and <span class="pack">bnlearn</span> packages.</p>
+</div>
+<div id="observed-covariates" class="section level3">
+<h3>Observed covariates</h3>
+<p>While I would hope it is by now, just to be clear, SEM doesn’t only have to be about structural relations among latent variables. At any point observed covariates can be introduced to the structural model as well, and this is common practice. As an example, the alienation model is fundamentally inadequate, as it doesn’t include many background or other characteristics we’d commonly collect on individuals and which might influence feelings of alienation.</p>
+</div>
+<div id="interactions" class="section level3">
+<h3>Interactions</h3>
+<p>Interactions among both observed and latent variables can be included in SEM, and have the same interpretation as they would in any regression model. With latent variables, one can think of adding a latent variable whose indicator variables consists of product terms of the indicators for the latent variables we want to have an interaction. See <span class="func">indProd</span> and <span class="func">probe2WayMC</span> in the <span class="pack">semTools</span> package. As noted previously, a common term for this in SEM terminology is <span class="emph">moderation</span>. While many depictions in SEM suggest that one variable <em>moderates</em> another, statistically speaking, just like with standard interactions, it is arbitrary whether one says <strong>A</strong> interacts with/moderates <strong>B</strong> or vice versa, and this fact doesn’t change just because we are conducting an SEM. <a href="http://m-clark.github.io/docs/sem/graphical-models-1.html#terminology-issues">As described previously</a>, one would need to have a specific causal setup to test for moderation.</p>
+</div>
+<div id="estimation" class="section level3">
+<h3>Estimation</h3>
+<p>In everything demonstrated thus far, we have been using standard maximum likelihood to estimate the parameters. This may not be the best choice for various situations. As an example, some estimation procedures provide ‘robust’ standard errors, essentially the equivalent of Huber-White standard errors in the SEM context. One should probably ask for these robust or bootstrapped standard errors almost as a default. Other procedures may be better for categorical data situations. The following list comes from the Mplus manual, and most of these are available in <span class="pack">lavaan</span>.</p>
+<ul>
+<li><strong>ML</strong>: maximum likelihood parameter estimates with conventional standard errors and chi-square test statistic</li>
+<li><strong>MLM</strong>: maximum likelihood parameter estimates with standard errors and a mean-adjusted chi-square test statistic that are robust to non-normality. The chi-square test statistic is also referred to as the Satorra-Bentler chi-square.</li>
+<li><strong>MLMV</strong>: maximum likelihood parameter estimates with standard errors and a mean- and variance-adjusted chi-square test statistic that are robust to non-normality</li>
+<li><strong>MLR</strong>: maximum likelihood parameter estimates with standard errors and a chi-square test statistic (when applicable) that are robust to non-normality and non-independence of observations when used with TYPE=COMPLEX. The MLR standard errors are computed using a sandwich estimator. The MLR chi-square test statistic is asymptotically equivalent to the Yuan-Bentler T2* test statistic.</li>
+<li><strong>MLF</strong>: maximum likelihood parameter estimates with standard errors approximated by first-order derivatives and a conventional chi-square test statistic</li>
+<li><strong>MUML</strong>: Muthén’s limited information parameter estimates, standard errors, and chi-square test statistic</li>
+<li><strong>WLS</strong>: weighted least square parameter estimates with conventional standard errors and chi-square test statistic that use a full weight matrix. The WLS chi-square test statistic is also referred to as ADF when all outcome variables are continuous.</li>
+<li><strong>WLSM</strong>: weighted least square parameter estimates using a diagonal weight matrix with standard errors and mean-adjusted chi-square test statistic that use a full weight matrix</li>
+<li><strong>WLSMV</strong>: weighted least square parameter estimates using a diagonal weight matrix with standard errors and mean- and variance-adjusted chi-square test statistic that use a full weight matrix</li>
+<li><strong>ULS</strong>: unweighted least squares parameter estimates</li>
+<li><strong>ULSMV</strong>: unweighted least squares parameter estimates with standard errors and a mean- and variance-adjusted chi-square test statistic that use a full weight matrix</li>
+<li><strong>GLS</strong>: generalized least square parameter estimates with conventional standard errors and chi-square test statistic that use a normal-theory based weight matrix</li>
+<li><strong>Bayes</strong>: Bayesian posterior parameter estimates with credibility intervals and posterior predictive checking<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fn45" class="footnoteRef" id="fnref45"><sup>45</sup></a></li>
+</ul>
+</div>
+<div id="missing-data" class="section level3">
+<h3>Missing data</h3>
+<p>A lot of data of interest in applications of SEM have missing values. Two common approaches to dealing with this are <span class="emph">Full Information Maximum Likelihood</span> (FIML) and <span class="emph">Multiple Imputation</span> (MI), and both are generally available in SEM packages. This is far too detailed an issue to treat adequately here, though we can take a moment to describe the approach generally. FIML uses the available information in the data (think pairwise correlations). MI uses a process to estimate the raw data values, and to adequately account for the uncertainty in those guesses, it creates multiple versions of complete data sets, each with different estimates for the missing values. The SEM model is conducted with all completed data sets and estimates combined across all models (e.g.&nbsp;the mean path parameter). The imputation models, i.e.&nbsp;those used to estimate the missing values, can be any sort of regression model, including using variables not in the SEM model.</p>
+<p>In addition, Bayesian approaches can estimate the missing values as additional parameters in the model (in fact, MI is essentially steeped within the Bayesian approach). Also there may additional concerns when data is missing over time, i.e.&nbsp;longitudinal dropout. Using the <span class="pack">lavaan</span> package is nice because it comes with FIML, and the <span class="pack">semTools</span> package adds MI and 2-stage maximum likelihood procedures.</p>
+</div>
+<div id="other-sem-approaches" class="section level3">
+<h3>Other SEM approaches</h3>
+<p>SEM is very flexible and applicable to a wide variety of modeling situations. Some of these will be covered in their own module (e.g.&nbsp;mixture models, growth curve modeling).</p>
+</div>
+</div>
+<div id="how-to-fool-yourself-with-sem" class="section level2">
+<h2>How to fool yourself with SEM</h2>
+<p>Kline’s third edition text listed over 50(!) ways in which one could fool themselves with SEM, which speaks to the difficulty in running SEM and dealing with all of its issues. I will note a handful of some of them to keep in mind in particular.</p>
+<div id="sample-size" class="section level3">
+<h3>Sample size</h3>
+<p>If you don’t have at least a thousand observations, and your primary means of understanding the model is through statistically significant paths under the assumption of stable results, you will probably only be able to conduct (possibly unrealistically) simple SEM models, or just the measurement models for scale development, or only structural models with observed variables (path analysis). Even with simpler modeling situations and with truly ideal data circumstances (which rarely happens in practice), multiple studies have shown one should have several hundred observations for best results. In the simple alienation model above, we already are dealing with 17 parameters to estimate, and it doesn’t include any background covariates of the individuals, which is unrealistic. Furthermore, because it’s a mediation model, adding such variables might require additional direct and indirect paths, time-varying covariates that would have effects at both years, etc., and the number of parameters could balloon quite quickly.</p>
+<p>One will see many articles of published research with low sample sizes using SEM. This doesn’t make it acceptable practice, only perhaps that the journal editors and reviewers of the article are not methodologists. One should be highly cautious of the results suggested in those papers, as they are overfit and/or are possibly not including relevant variables.</p>
+</div>
+<div id="poor-data" class="section level3">
+<h3>Poor data</h3>
+<p>If the correlations among the data are low, one isn’t going to magically have strong effects by using SEM. I have seen many clients running these models and who are surprised that they don’t turn out well, when a quick glance at the correlation matrix would have suggested that there wasn’t much to work with in the first place.</p>
+</div>
+<div id="naming-a-latent-variable-doesnt-mean-it-exists" class="section level3">
+<h3>Naming a latent variable doesn’t mean it exists</h3>
+<p>We discussed the naming fallacy in the section on <a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#latent-variables-1">latent variables</a>, and it continues to exist when exploring structural relations among them. While everything may turn out well for one’s measurement model, and the results in keeping with theory, this doesn’t make it so. This is especially the case with less reliable measures. Latent constructs require operational definitions and other considerations in order to be useful, and rule out that one isn’t simply measuring something else, or that it makes sense that such a construct has real (physical ties).</p>
+<p>As an example, many diagnoses in the Diagnostic and Statistical Manual of Mental Disorders have not even been shown to exist via a statistical approach like SEM<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fn46" class="footnoteRef" id="fnref46"><sup>46</sup></a>, while others are simply assumed to exist, and even presumably (subsequently) supported by measurement models (often with low N), only to be shown to have no ties to any underlying physiology.</p>
+</div>
+<div id="ignoring-diagnostics" class="section level3">
+<h3>Ignoring diagnostics</h3>
+<p>Ignoring residuals, warning messages, etc. is a sure path to trying to interpret nonsensical results. Look at your residuals, fitted values etc. If your SEM software of choice is giving you messages, find out what they mean, because it may be very important.</p>
+</div>
+<div id="ignoring-performance" class="section level3">
+<h3>Ignoring performance</h3>
+<p>As in our previous path analysis example, one can write a paper on a good fitting model with statistically significant results, and not explain the targets of interest very well on a practical level. When possible, check things like R-square (and accuracy if binary targets) when running your models, compare them with AIC etc.</p>
+</div>
+</div>
+<div id="summary-4" class="section level2">
+<h2>Summary</h2>
+<p>SEM is a powerful modeling approach that generalizes many other statistical techniques, but it simply cannot be used lightly. Unfortunately, you cannot look much to how SEM is typically practiced to find out how to do SEM well<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fn47" class="footnoteRef" id="fnref47"><sup>47</sup></a>. The usual issues are poor underlying theory, small samples, poor samples, use of post-hoc ‘theory correction’, and lack of competition among plausible alternatives. The vast majority of the situations I’ve come across would have benefitted from the model search paradigm described in the section on [Bayesian networks][Baysian Networks].</p>
+<p>On the other hand, strong theory, strong data, and a lot of data can potentially result in quite interesting models that have a lot to say about the underlying constructs of interest. While it doesn’t have to be restricted to such, SEM works best for models with explicit causal motivations. Go into it cautiously, prepare to spend a lot of time in model building and inspection, and allow for competing ideas to have their say, and you may find success.</p>
+</div>
+<div id="terminology-1" class="section level2">
+<h2>Terminology</h2>
+<ul>
+<li><strong>Measurement model</strong>: the factor analysis component of an SEM</li>
+<li><strong>Structural model</strong>: the regression component of an SEM</li>
+<li><strong>Fit</strong>: Model fit is something very difficult to ascertain in SEM, and notoriously problematic in this setting, where all proposed cutoffs for a good fit are ultimately arbitrary. Even if one had most fit indices suggesting a ‘good’ fit, there’s little indication the model has predictive capability.</li>
+<li><strong>Identification</strong>: Refers to whether a unique solution can possibly be estimated for a given model. Models may be under-, over- or just-identified. It is a function of the model specification rather than the data.</li>
+<li><strong>Exploratory SEM</strong>: a term about as useful as ‘exploratory’ <a href="http://m-clark.github.io/docs/sem/latent-variables-1.html#exploratory-vs.confirmatory">factor analysis</a>.<br>
+</li>
+<li><strong>Fully vs.&nbsp;Partially Latent SEM</strong>: see previous.</li>
+<li><strong>MIMIC Model</strong>: see previous.</li>
+<li><strong>Mixture Models</strong>: models using categorical latent variables. See the relevant chapter.</li>
+<li><strong>Growth Curve Models</strong>: models for longitudinal data setting. See the relevant chapter.</li>
+<li><strong>Growth Mixture Models</strong>: guess.</li>
+<li><strong>Single indicator models</strong>: In some circumstances, and with the appropriate constraints, a latent variable can have a single indicator.</li>
+<li><strong>Multilevel SEM</strong>: a model where your Mplus syntax looks confusing, and then you see the output and long for the good ol’ days.</li>
+</ul>
+</div>
+<div id="r-packages-used-2" class="section level2">
+<h2>R Packages Used</h2>
+<ul>
+<li><span class="pack">lavaan</span></li>
+<li><span class="pack">semTools</span></li>
+<li><span class="pack">semPlot</span></li>
+</ul>
+
+</div>
+</div>
+<div class="footnotes">
+<hr>
+<ol start="40">
+<li id="fn40"><p>Bollen &amp; Pearl (2013) put the causal aspect this way: ‘SEM is an inference engine that takes in two inputs, qualitative causal assumptions and empirical data, and derives two logical consequences of these inputs: quantitative causal conclusions and statistical measures of fit for the testable implications of the assumptions. Failure to fit the data casts doubt on the strong causal assumptions of zero coefficients or zero covariances and guides the researcher to diagnose, or repair the structural misspecifications. Fitting the data does not “prove” the causal assumptions, but it makes them tentatively more plausible. Any such positive results need to be replicated and to withstand the criticisms of researchers who suggest other models for the same data.’.<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fnref40">↩</a></p></li>
+<li id="fn41"><p>For example, practically every growth curve model I’ve ever come across. I cringe every time I see one that doesn’t include time-varying covariates, though I know why they aren’t there.<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fnref41">↩</a></p></li>
+<li id="fn42"><p>And not in a Bayesian approach where it might be more viable.<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fnref42">↩</a></p></li>
+<li id="fn43"><p>See also this <a href="http://davidakenny.net/cm/fit.htm">site</a>, which seems to somehow have escaped the dissolution of GeoCities webpages.<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fnref43">↩</a></p></li>
+<li id="fn44"><p>This function, while very useful, incorrectly notes which fit is ‘better’ in terms of fit indices that cannot be used to compare models, and furthermore provides no way to turn the flag off.<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fnref44">↩</a></p></li>
+<li id="fn45"><p>See the <span class="pack">blavaan</span> package.<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fnref45">↩</a></p></li>
+<li id="fn46"><p>Despite the name, there is nothing inherently ‘statistical’ about the DSM.<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fnref46">↩</a></p></li>
+<li id="fn47"><p>I’m not sure why this is, but usually it is due to a lack of communication. According to Google scholar, Rex Kline’s applied text on SEM, which did not even have a chapter on graphical models until the most recent edition (which came out 17 years after the first), has been cited 10000 times more than any specific work Pearl has put out, who has several works cited well over 1000 times each. I would hazard a guess that most of the people doing SEM in psychology and education are not citing Pearl, despite his having provided many non-technical summaries that most could follow. There is certainly a disconnect somewhere.<a href="http://m-clark.github.io/docs/sem/structural-equation-modeling.html#fnref47">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="http://m-clark.github.io/docs/sem/latent-variables-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="http://m-clark.github.io/docs/sem/latent-growth-curves.html" class="navigation navigation-next " aria-label="Next page" style="margin-right: 17px;"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="./Graphical and Latent Variable Modeling_files/app.min.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/lunr.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/plugin-search.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/plugin-sharing.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/plugin-fontsettings.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/plugin-bookdown.js.download"></script>
+<script src="./Graphical and Latent Variable Modeling_files/jquery.highlight.js.download"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "serif",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/05_sem.Rmd",
+"text": "Edit"
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"highlight": "pygments",
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+
+</body></html>

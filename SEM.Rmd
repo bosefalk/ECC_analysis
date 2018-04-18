@@ -36,6 +36,7 @@ dat_DK4 %<>% filter(cntry == "DK")
 #https://www.draw.io/#G1VOWRneuwvycp48p7TP8YTj6darYgvRPW
 # http://lavaan.ugent.be/tutorial/tutorial.pdf
 # http://joophox.net/publist/semfamre.pdf
+# http://m-clark.github.io/docs/sem/structural-equation-modeling.html#measurement-model
 SEM_mod1 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
   trst_ind =~ ppltrst + pplfair + pplhlp
   pol_news =~ tvpol + rdpol + nwsppol
