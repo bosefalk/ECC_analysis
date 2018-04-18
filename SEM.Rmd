@@ -18,8 +18,8 @@ dat <- load_data('trustdem2')
 
 ```{r}
 # Filter to keep only Denmark and one survery round for now
-dat %<>% filter(essround == "4")
-dat %<>% filter(cntry == "DK")
+dat_DK4 <- dat %>% filter(essround == "4")
+dat_DK4 %<>% filter(cntry == "DK")
 
 
 ```
@@ -42,7 +42,7 @@ SEM_mod1 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
   trst_ind ~~ 0*pol_news
 '
 
-fit1 = sem(SEM_mod1, data = dat)
+fit1 = sem(SEM_mod1, data = dat_DK4)
 summary(fit1, fit.measures = TRUE)
 ```
 
@@ -51,56 +51,33 @@ summary(fit1, fit.measures = TRUE)
 SEM_mod2 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
   trst_ind =~ ppltrst + pplfair + pplhlp
   pol_news =~ tvpol + rdpol + nwsppol
-  trst_gov ~ trst_ind + pol_news + netuse + hinctnta
+  trst_gov ~ trst_ind + pol_news + netuse + hinctnta + agea
 
   # Individual trust and news watching is not correlated
   trst_ind ~~ 0*pol_news
 
 
-  # Income and education is correlated
-  #hinctnta ~~ edulvla
-
+  # Correlations
+  agea ~~ netuse + hinctnta
 '
 
-fit2 = sem(SEM_mod2, data = dat)
+fit2 = sem(SEM_mod2, data = dat_DK4)
 summary(fit2, fit.measures = TRUE)
 
 ```
 
 
-```{r}
-SEM_mod3 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
-  trst_ind =~ ppltrst + pplfair + pplhlp
-  pol_news =~ tvpol + rdpol + nwsppol
-  trst_gov ~ trst_ind + pol_news + netuse + agea + edulvla + hinctnta
-
-  # Correlations
-  edulvla ~~ agea + hinctnta
-  agea ~~ hinctnta 
-'
-
-fit3 = sem(SEM_mod3, data = dat)
-summary(fit3, fit.measures = TRUE)
-
-```
-
-
-```{r}
-
-
-```
-
 
 ```{r}
 # Just to test my understanding, invert one trust variable and we should see an Estimate with the opposite sign
 
-dat$trstplc_inv <- abs(dat$trstplc - 10)
+dat_DK4$trstplc_inv <- abs(dat_DK4$trstplc - 10)
 
 SEM_mod3 <- 'trst_gov =~ trstprl + trstlgl + trstplc_inv + trstprt
   pol_news =~ tvpol + rdpol + nwsppol
   trst_gov ~ pol_news + netuse'
 
-fit3 = sem(SEM_mod3, data = dat)
+fit3 = sem(SEM_mod3, data = dat_DK4)
 summary(fit3, fit.measures = TRUE)
 
 
@@ -108,39 +85,72 @@ summary(fit3, fit.measures = TRUE)
 ```
 
 
-```{r}
-SEM_mod4 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt + tvpol
-  pol_news =~ rdpol + nwsppol
-  trst_gov ~ pol_news + netuse'
-
-fit4 = sem(SEM_mod4, data = dat)
-summary(fit4, fit.measures = TRUE)
-
-
-
-```
-
+# Comparing studies within same country
 
 ```{r}
-
-# With correlations
-
-SEM_mod6 <- '# Latent variables
-  trst_gov =~ trstprl + trstlgl + trstplc + trstprt
-  trst_ind =~ ppltrst + pplfair + pplhlp
-  pol_news =~ tvpol + rdpol + nwsppol
-  
-  # Regression model
-  trst_gov ~ trst_ind + pol_news + netuse
-
-  '
+dat_DK5 <- dat %>% filter(essround == "5" & cntry == "DK")
 
 
-fit6 = sem(SEM_mod6, data = dat)
-summary(fit6, fit.measures = TRUE)
+fit_DK4 <- sem(SEM_mod2, data = dat_DK4)
+fit_DK5 <- sem(SEM_mod2, data = dat_DK5)
+```
+
+
+
+```{r}
+summary(fit_DK4, fit.measures = TRUE)
+```
+
+
+```{r}
+summary(fit_DK5, fit.measures = TRUE)
 
 
 ```
 
 
+# Estonia both surveys
+```{r}
+dat_EE5 <- dat %>% filter(essround == "5" & cntry == "EE")
+dat_EE4 <- dat %>% filter(essround == "4" & cntry == "EE")
+
+
+fit_EE4 <- sem(SEM_mod2, data = dat_EE4)
+fit_EE5 <- sem(SEM_mod2, data = dat_EE5)
+
 ```
+
+```{r}
+summary(fit_EE4, fit.measures = TRUE)
+```
+
+
+```{r}
+summary(fit_EE5, fit.measures = TRUE)
+```
+
+
+# CZ both surveys
+```{r}
+dat_CZ5 <- dat %>% filter(essround == "5" & cntry == "CZ")
+dat_CZ4 <- dat %>% filter(essround == "4" & cntry == "CZ")
+
+
+fit_CZ4 <- sem(SEM_mod2, data = dat_CZ4)
+fit_CZ5 <- sem(SEM_mod2, data = dat_CZ5)
+
+```
+
+```{r}
+summary(fit_CZ4, fit.measures = TRUE)
+
+```
+
+```{r}
+summary(fit_CZ5, fit.measures = TRUE)
+
+```
+
+# Conclusions
+
+Model works ok, not a great fit. Individual trust is biggest contributor to trusting government institutions, followed by household income - age is generally not important. Following political news generally means higher trust in government but not a strong correlation, and online use is not important
