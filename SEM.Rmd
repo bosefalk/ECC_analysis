@@ -151,6 +151,84 @@ summary(fit_CZ5, fit.measures = TRUE)
 
 ```
 
+
+# Plots
+```{r}
+list_of_fits <- list("DK4" = fit_DK4, "DK5" = fit_DK5, 
+                     "EE4" = fit_EE4, "EE5" = fit_EE5, 
+                     "CZ4" = fit_CZ4, "CZ5" = fit_CZ5)
+
+colour_scale = scale_colour_manual(values = c("DK4" = "green", "DK5" = "darkgreen", 
+                                 "EE4" = "blue", "EE5" = "darkblue", 
+                                 "CZ4" = "red", "CZ5" = "darkred"))
+
+```
+
+```{r}
+params_list <- list()
+for (i in 1:length(list_of_fits)) {
+  params_list[[i]] <- parameterEstimates(list_of_fits[[i]])
+  params_list[[i]]$source <- names(list_of_fits)[i]
+  
+}
+
+params_df <- do.call(rbind, params_list)
+params_df %<>% filter(lhs == 'trst_gov' & op == '~') %>% select(rhs, est, ci.lower, ci.upper, source)
+
+ggplot(params_df, aes(x = rhs)) + 
+  geom_pointrange(aes(y = est, ymin = ci.lower, ymax = ci.upper, colour = source), position=position_dodge(width=0.4)) + 
+  geom_hline(yintercept = 0) +
+  colour_scale +
+  labs(title = "Coefficient Estimates", 
+       x = "Variable", 
+       y = "Estimate")
+
+
+```
+
+```{r}
+
+
+fit_out_list <- list()
+for (i in 1:length(list_of_fits)) {
+  fit_out <- fitmeasures(list_of_fits[[i]])
+  fit_out_list[[i]] <- data.frame(source = names(list_of_fits)[i], 
+                       rmsea = fit_out['rmsea'], 
+                       rmsea.ci.lower = fit_out['rmsea.ci.lower'], 
+                       rmsea.ci.upper = fit_out['rmsea.ci.upper'])
+
+}
+fit_df <- do.call(rbind, fit_out_list)
+
+ggplot(fit_df, aes(x = source)) + geom_pointrange(aes(y = rmsea, ymin = rmsea.ci.lower, ymax = rmsea.ci.upper, colour = source)) +
+  colour_scale +
+  expand_limits(y = 0) +
+  geom_hline(yintercept = 0.1, lty = 3) +
+  geom_hline(yintercept = 0.05, lty = 2) +
+  geom_hline(yintercept = 0) +
+  labs(title = "Root Mean Square Error of Approximation", 
+       x = "Model", 
+       y = "RMSEA")
+
+```
+
+
+# Mean-only model
+
+```{r}
+attach(dat)
+trst_gov_mean <- mean(trstprl, trstlgl, trstplc, trstprt)
+trst_ind_mean <- mean(ppltrst, pplfair, pplhlp)
+pol_news_mean <- mean(tvpol, rdpol, nwsppol)
+  
+
+
+trst_gov ~ trst_ind + pol_news + netuse + hinctnta + agea
+
+```
+
+
+
 # Conclusions
 
 Model works ok, not a great fit. Individual trust is biggest contributor to trusting government institutions, followed by household income - age is generally not important. Following political news generally means higher trust in government but not a strong correlation, and online use is not important
