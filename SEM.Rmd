@@ -12,6 +12,9 @@ source('lib/loading_scripts.R')
 dat <- load_data('trustdem2')
 #validate_data(dat)
 
+dat %<>% rowwise %>% mutate(trst_gov_mean = mean(c(trstprl, trstlgl, trstplc, trstprt)), 
+                            trst_ind_mean = mean(c(ppltrst, pplfair, pplhlp)), 
+                            pol_news_mean = mean(c(tvpol, rdpol, nwsppol)))
 
 ```
 
@@ -216,14 +219,16 @@ ggplot(fit_df, aes(x = source)) + geom_pointrange(aes(y = rmsea, ymin = rmsea.ci
 # Mean-only model
 
 ```{r}
-attach(dat)
-trst_gov_mean <- mean(trstprl, trstlgl, trstplc, trstprt)
-trst_ind_mean <- mean(ppltrst, pplfair, pplhlp)
-pol_news_mean <- mean(tvpol, rdpol, nwsppol)
-  
+
+sem_means_model <- 'trst_gov_mean ~ trst_ind_mean + pol_news_mean + netuse + hinctnta + agea'
+fit_means <- sem(sem_means_model, data = dat_DK4)
+summary(fit_means, fit.measures = TRUE)
+```
 
 
-trst_gov ~ trst_ind + pol_news + netuse + hinctnta + agea
+```{r}
+library(semTools)
+compareFit(fit_DK4, fit_means)
 
 ```
 
