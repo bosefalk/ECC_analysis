@@ -72,7 +72,19 @@ ggplot(dat_diff_plot, aes(x = comparison, y = difference)) + geom_boxplot() + fa
 
 
 ```{r}
+plot_df <- dat %>% select(cntry, trstprl, trstlgl, trstplc, trstprt) %>%
+  rename(country = cntry, 
+         trust_legal = trstlgl, 
+         trust_polparties = trstprt, 
+         trust_police = trstplc, 
+         trust_parliament = trstprl)
+plot_df <- gather(plot_df, 'variable', 'survey_level', 2:5)
 
+ggplot(plot_df, aes(x = variable, y = survey_level, fill = country)) +
+  geom_boxplot() +
+  labs(title = "Trust variable survey answers", 
+       x = "Survey Question", 
+       y = "Response")
 
 
 ```
