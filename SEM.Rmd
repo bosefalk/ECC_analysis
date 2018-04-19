@@ -1,7 +1,12 @@
 ---
-title: "Structured Equation Modeling"
-output: html_notebook
+title: "ESS analysis"
+author: "Bose Falk"
+output:
+  html_document:
+    df_print: paged
 ---
+
+# Data loading
 
 ```{r}
 library(lavaan)
@@ -9,154 +14,94 @@ library(ggplot2)
 library(tidyverse)
 source('lib/loading_scripts.R')
 
-dat <- load_data('trustdem2')
-#validate_data(dat)
+dat <- load_data('trustdem2', open_docs = FALSE)
+#validate_data(dat) # Haven't finished updating validation rules for new variables
 
-dat %<>% rowwise %>% mutate(trst_gov_mean = mean(c(trstprl, trstlgl, trstplc, trstprt)), 
-                            trst_ind_mean = mean(c(ppltrst, pplfair, pplhlp)), 
-                            pol_news_mean = mean(c(tvpol, rdpol, nwsppol)))
-
+dat %<>% rename(trust_legal = trstlgl, 
+          trust_polparties = trstprt, 
+          trust_police = trstplc, 
+          trust_parliament = trstprl, 
+          tv_polnews = tvpol, 
+          radio_polnews = rdpol, 
+          newsp_polnews = nwsppol, 
+          ppl_trustworthy = ppltrst, 
+          ppl_fair = pplfair, 
+          ppl_helpful = pplhlp, 
+          income = hinctnta, 
+          age = agea)
 ```
 
 
-```{r}
-# Filter to keep only Denmark and one survery round for now
-dat_DK4 <- dat %>% filter(essround == "4")
-dat_DK4 %<>% filter(cntry == "DK")
-
-
-```
-
-
-
-# SEM model 1
+## SEM model specification
 
 
 ```{r}
-#https://www.draw.io/#G1VOWRneuwvycp48p7TP8YTj6darYgvRPW
+
+# Background on SEM modelling in R:
 # http://lavaan.ugent.be/tutorial/tutorial.pdf
 # http://joophox.net/publist/semfamre.pdf
 # http://m-clark.github.io/docs/sem/structural-equation-modeling.html#measurement-model
-SEM_mod1 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
-  trst_ind =~ ppltrst + pplfair + pplhlp
-  pol_news =~ tvpol + rdpol + nwsppol
-  trst_gov ~ trst_ind + pol_news + netuse
+
+SEM_model <- 'trust_gov =~ trust_parliament + trust_legal + trust_police + trust_polparties
+  trust_ind =~ ppl_trustworthy + ppl_fair + ppl_helpful
+  pol_news =~ tv_polnews + radio_polnews + newsp_polnews
+  trust_gov ~ trust_ind + pol_news + netuse + income + age
 
   # Individual trust and news watching is not correlated
-  trst_ind ~~ 0*pol_news
-'
-
-fit1 = sem(SEM_mod1, data = dat_DK4)
-summary(fit1, fit.measures = TRUE)
-```
-
-```{r}
-
-SEM_mod2 <- 'trst_gov =~ trstprl + trstlgl + trstplc + trstprt
-  trst_ind =~ ppltrst + pplfair + pplhlp
-  pol_news =~ tvpol + rdpol + nwsppol
-  trst_gov ~ trst_ind + pol_news + netuse + hinctnta + agea
-
-  # Individual trust and news watching is not correlated
-  trst_ind ~~ 0*pol_news
+  trust_ind ~~ 0*pol_news
 
 
   # Correlations
-  agea ~~ netuse + hinctnta
+  age ~~ netuse + income
 '
-
-fit2 = sem(SEM_mod2, data = dat_DK4)
-summary(fit2, fit.measures = TRUE)
-
 ```
 
-
-
+## Fitting models
 ```{r}
-# Just to test my understanding, invert one trust variable and we should see an Estimate with the opposite sign
+# Create dataframes with individual model data based on country and study round
 
-dat_DK4$trstplc_inv <- abs(dat_DK4$trstplc - 10)
-
-SEM_mod3 <- 'trst_gov =~ trstprl + trstlgl + trstplc_inv + trstprt
-  pol_news =~ tvpol + rdpol + nwsppol
-  trst_gov ~ pol_news + netuse'
-
-fit3 = sem(SEM_mod3, data = dat_DK4)
-summary(fit3, fit.measures = TRUE)
-
-
-
-```
-
-
-# Comparing studies within same country
-
-```{r}
+dat_DK4 <- dat %>% filter(essround == "4" & cntry == "DK")
 dat_DK5 <- dat %>% filter(essround == "5" & cntry == "DK")
 
-
-fit_DK4 <- sem(SEM_mod2, data = dat_DK4)
-fit_DK5 <- sem(SEM_mod2, data = dat_DK5)
-```
-
-
-
-```{r}
-summary(fit_DK4, fit.measures = TRUE)
-```
-
-
-```{r}
-summary(fit_DK5, fit.measures = TRUE)
-
-
-```
-
-
-# Estonia both surveys
-```{r}
-dat_EE5 <- dat %>% filter(essround == "5" & cntry == "EE")
 dat_EE4 <- dat %>% filter(essround == "4" & cntry == "EE")
+dat_EE5 <- dat %>% filter(essround == "5" & cntry == "EE")
 
-
-fit_EE4 <- sem(SEM_mod2, data = dat_EE4)
-fit_EE5 <- sem(SEM_mod2, data = dat_EE5)
-
-```
-
-```{r}
-summary(fit_EE4, fit.measures = TRUE)
-```
-
-
-```{r}
-summary(fit_EE5, fit.measures = TRUE)
-```
-
-
-# CZ both surveys
-```{r}
-dat_CZ5 <- dat %>% filter(essround == "5" & cntry == "CZ")
 dat_CZ4 <- dat %>% filter(essround == "4" & cntry == "CZ")
-
-
-fit_CZ4 <- sem(SEM_mod2, data = dat_CZ4)
-fit_CZ5 <- sem(SEM_mod2, data = dat_CZ5)
+dat_CZ5 <- dat %>% filter(essround == "5" & cntry == "CZ")
 
 ```
+
+### Small example model
 
 ```{r}
-summary(fit_CZ4, fit.measures = TRUE)
+SEM_basic <- 'trust_gov =~ trust_parliament + trust_legal + trust_police + trust_polparties
+  pol_news =~ tv_polnews + radio_polnews + newsp_polnews
+  trust_gov ~ pol_news + netuse
+
+'
+
+fit_basic <- sem(SEM_basic, data = dat_DK4)
+summary(fit_basic)
 
 ```
+
+### Fit all 6 models
+
 
 ```{r}
-summary(fit_CZ5, fit.measures = TRUE)
+fit_DK4 <- sem(SEM_model, data = dat_DK4)
+fit_DK5 <- sem(SEM_model, data = dat_DK5)
+
+fit_EE4 <- sem(SEM_model, data = dat_EE4)
+fit_EE5 <- sem(SEM_model, data = dat_EE5)
+
+fit_CZ4 <- sem(SEM_model, data = dat_CZ4)
+fit_CZ5 <- sem(SEM_model, data = dat_CZ5)
 
 ```
 
+# Result plots
 
-# Plots
 ```{r}
 list_of_fits <- list("DK4" = fit_DK4, "DK5" = fit_DK5, 
                      "EE4" = fit_EE4, "EE5" = fit_EE5, 
@@ -168,6 +113,8 @@ colour_scale = scale_colour_manual(values = c("DK4" = "green", "DK5" = "darkgree
 
 ```
 
+### Coefficient estimates
+
 ```{r}
 params_list <- list()
 for (i in 1:length(list_of_fits)) {
@@ -177,7 +124,7 @@ for (i in 1:length(list_of_fits)) {
 }
 
 params_df <- do.call(rbind, params_list)
-params_df %<>% filter(lhs == 'trst_gov' & op == '~') %>% select(rhs, est, ci.lower, ci.upper, source)
+params_df %<>% filter(lhs == 'trust_gov' & op == '~') %>% select(rhs, est, ci.lower, ci.upper, source)
 
 ggplot(params_df, aes(x = rhs)) + 
   geom_pointrange(aes(y = est, ymin = ci.lower, ymax = ci.upper, colour = source), position=position_dodge(width=0.4)) + 
@@ -189,6 +136,8 @@ ggplot(params_df, aes(x = rhs)) +
 
 
 ```
+
+### RMSEA diagnostic
 
 ```{r}
 
@@ -216,25 +165,3 @@ ggplot(fit_df, aes(x = source)) + geom_pointrange(aes(y = rmsea, ymin = rmsea.ci
 
 ```
 
-
-# Mean-only model
-
-```{r}
-
-sem_means_model <- 'trst_gov_mean ~ trst_ind_mean + pol_news_mean + netuse + hinctnta + agea'
-fit_means <- sem(sem_means_model, data = dat_DK4)
-summary(fit_means, fit.measures = TRUE)
-```
-
-
-```{r}
-library(semTools)
-compareFit(fit_DK4, fit_means)
-
-```
-
-
-
-# Conclusions
-
-Model works ok, not a great fit. Individual trust is biggest contributor to trusting government institutions, followed by household income - age is generally not important. Following political news generally means higher trust in government but not a strong correlation, and online use is not important
